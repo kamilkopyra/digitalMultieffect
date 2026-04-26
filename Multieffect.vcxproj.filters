@@ -13,96 +13,105 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Pliki nagłówkowe\core">
+      <UniqueIdentifier>{8179e0ef-25e8-4954-be61-a250bfd68ee8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki nagłówkowe\effects">
+      <UniqueIdentifier>{8f9c41e9-5eb6-49d5-bb43-cbc60b841bc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki źródłowe\core">
+      <UniqueIdentifier>{c1545d7b-1a63-4d49-acf1-6c85b059a040}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki źródłowe\effects">
+      <UniqueIdentifier>{7131d106-92fe-41c0-8b10-d8a44ed2fa7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AudioEngine.h">
-      <Filter>Pliki nagłówkowe</Filter>
+    <ClInclude Include="core\AudioEngine.h">
+      <Filter>Pliki nagłówkowe\core</Filter>
     </ClInclude>
-    <ClInclude Include="Fuzz.h">
-      <Filter>Pliki nagłówkowe</Filter>
+    <ClInclude Include="core\EventHandler.h">
+      <Filter>Pliki nagłówkowe\core</Filter>
     </ClInclude>
-    <ClInclude Include="Tuner.h">
-      <Filter>Pliki nagłówkowe</Filter>
+    <ClInclude Include="core\Effect.h">
+      <Filter>Pliki nagłówkowe\core</Filter>
     </ClInclude>
-    <ClInclude Include="Tremolo.h">
-      <Filter>Pliki nagłówkowe</Filter>
+    <ClInclude Include="effects\Tremolo.h">
+      <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
-    <ClInclude Include="NoiseGate.h">
-      <Filter>Pliki nagłówkowe</Filter>
+    <ClInclude Include="effects\AutoWah.h">
+      <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
-    <ClInclude Include="Delay.h">
-      <Filter>Pliki nagłówkowe</Filter>
+    <ClInclude Include="effects\Compressor.h">
+      <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
-    <ClInclude Include="Equalizer.h">
-      <Filter>Pliki nagłówkowe</Filter>
+    <ClInclude Include="effects\Delay.h">
+      <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
-    <ClInclude Include="Overdrive.h">
-      <Filter>Pliki nagłówkowe</Filter>
+    <ClInclude Include="effects\Equalizer.h">
+      <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
-    <ClInclude Include="Compressor.h">
-      <Filter>Pliki nagłówkowe</Filter>
+    <ClInclude Include="effects\Fuzz.h">
+      <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
-    <ClInclude Include="AutoWah.h">
-      <Filter>Pliki nagłówkowe</Filter>
+    <ClInclude Include="effects\Harmonizer.h">
+      <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
-    <ClInclude Include="Phaser.h">
-      <Filter>Pliki nagłówkowe</Filter>
+    <ClInclude Include="effects\NoiseGate.h">
+      <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
-    <ClInclude Include="Harmonizer.h">
-      <Filter>Pliki nagłówkowe</Filter>
+    <ClInclude Include="effects\Overdrive.h">
+      <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
-    <ClInclude Include="Effect.h">
-      <Filter>Pliki nagłówkowe</Filter>
-    </ClInclude>
-    <ClInclude Include="EventHandler.h">
-      <Filter>Pliki nagłówkowe</Filter>
+    <ClInclude Include="effects\Phaser.h">
+      <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AudioEngine.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="Fuzz.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="Tuner.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
-    <ClCompile Include="Tremolo.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="NoiseGate.cpp">
-      <Filter>Pliki źródłowe</Filter>
+    <ClCompile Include="core\AudioEngine.cpp">
+      <Filter>Pliki źródłowe\core</Filter>
     </ClCompile>
-    <ClCompile Include="Delay.cpp">
-      <Filter>Pliki źródłowe</Filter>
+    <ClCompile Include="core\Effect.cpp">
+      <Filter>Pliki źródłowe\core</Filter>
     </ClCompile>
-    <ClCompile Include="Equalizer.cpp">
-      <Filter>Pliki źródłowe</Filter>
+    <ClCompile Include="core\EventHandler.cpp">
+      <Filter>Pliki źródłowe\core</Filter>
     </ClCompile>
-    <ClCompile Include="Overdrive.cpp">
-      <Filter>Pliki źródłowe</Filter>
+    <ClCompile Include="effects\Fuzz.cpp">
+      <Filter>Pliki źródłowe\effects</Filter>
     </ClCompile>
-    <ClCompile Include="Compressor.cpp">
-      <Filter>Pliki źródłowe</Filter>
+    <ClCompile Include="effects\Harmonizer.cpp">
+      <Filter>Pliki źródłowe\effects</Filter>
     </ClCompile>
-    <ClCompile Include="AutoWah.cpp">
-      <Filter>Pliki źródłowe</Filter>
+    <ClCompile Include="effects\NoiseGate.cpp">
+      <Filter>Pliki źródłowe\effects</Filter>
     </ClCompile>
-    <ClCompile Include="Phaser.cpp">
-      <Filter>Pliki źródłowe</Filter>
+    <ClCompile Include="effects\Overdrive.cpp">
+      <Filter>Pliki źródłowe\effects</Filter>
     </ClCompile>
-    <ClCompile Include="Harmonizer.cpp">
-      <Filter>Pliki źródłowe</Filter>
+    <ClCompile Include="effects\Phaser.cpp">
+      <Filter>Pliki źródłowe\effects</Filter>
     </ClCompile>
-    <ClCompile Include="Effect.cpp">
-      <Filter>Pliki źródłowe</Filter>
+    <ClCompile Include="effects\Tremolo.cpp">
+      <Filter>Pliki źródłowe\effects</Filter>
     </ClCompile>
-    <ClCompile Include="EventHandler.cpp">
-      <Filter>Pliki źródłowe</Filter>
+    <ClCompile Include="effects\Tuner.cpp">
+      <Filter>Pliki źródłowe\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\AutoWah.cpp">
+      <Filter>Pliki źródłowe\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\Compressor.cpp">
+      <Filter>Pliki źródłowe\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\Delay.cpp">
+      <Filter>Pliki źródłowe\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\Equalizer.cpp">
+      <Filter>Pliki źródłowe\effects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -105,6 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)effects;$(ProjectDir)core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -120,6 +121,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)effects;$(ProjectDir)core;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,37 +129,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AudioEngine.h" />
-    <ClInclude Include="AutoWah.h" />
-    <ClInclude Include="Compressor.h" />
-    <ClInclude Include="Delay.h" />
-    <ClInclude Include="Effect.h" />
-    <ClInclude Include="Equalizer.h" />
-    <ClInclude Include="EventHandler.h" />
-    <ClInclude Include="Fuzz.h" />
-    <ClInclude Include="Harmonizer.h" />
-    <ClInclude Include="NoiseGate.h" />
-    <ClInclude Include="Overdrive.h" />
-    <ClInclude Include="Phaser.h" />
-    <ClInclude Include="Tremolo.h" />
-    <ClInclude Include="Tuner.h" />
+    <ClInclude Include="core\AudioEngine.h" />
+    <ClInclude Include="core\Effect.h" />
+    <ClInclude Include="core\EventHandler.h" />
+    <ClInclude Include="effects\AutoWah.h" />
+    <ClInclude Include="effects\Compressor.h" />
+    <ClInclude Include="effects\Delay.h" />
+    <ClInclude Include="effects\Equalizer.h" />
+    <ClInclude Include="effects\Fuzz.h" />
+    <ClInclude Include="effects\Harmonizer.h" />
+    <ClInclude Include="effects\NoiseGate.h" />
+    <ClInclude Include="effects\Overdrive.h" />
+    <ClInclude Include="effects\Phaser.h" />
+    <ClInclude Include="effects\Tremolo.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AudioEngine.cpp" />
-    <ClCompile Include="AutoWah.cpp" />
-    <ClCompile Include="Compressor.cpp" />
-    <ClCompile Include="Delay.cpp" />
-    <ClCompile Include="Effect.cpp" />
-    <ClCompile Include="Equalizer.cpp" />
-    <ClCompile Include="EventHandler.cpp" />
-    <ClCompile Include="Fuzz.cpp" />
-    <ClCompile Include="Harmonizer.cpp" />
+    <ClCompile Include="core\AudioEngine.cpp" />
+    <ClCompile Include="core\Effect.cpp" />
+    <ClCompile Include="core\EventHandler.cpp" />
+    <ClCompile Include="effects\AutoWah.cpp" />
+    <ClCompile Include="effects\Compressor.cpp" />
+    <ClCompile Include="effects\Delay.cpp" />
+    <ClCompile Include="effects\Equalizer.cpp" />
+    <ClCompile Include="effects\Fuzz.cpp" />
+    <ClCompile Include="effects\Harmonizer.cpp" />
+    <ClCompile Include="effects\NoiseGate.cpp" />
+    <ClCompile Include="effects\Overdrive.cpp" />
+    <ClCompile Include="effects\Phaser.cpp" />
+    <ClCompile Include="effects\Tremolo.cpp" />
+    <ClCompile Include="effects\Tuner.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="NoiseGate.cpp" />
-    <ClCompile Include="Overdrive.cpp" />
-    <ClCompile Include="Phaser.cpp" />
-    <ClCompile Include="Tremolo.cpp" />
-    <ClCompile Include="Tuner.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
