@@ -9,7 +9,7 @@ float Tremolo::process(float sample) {
 
 
 float Tremolo::tremoloEffect(float x) {
-	return x * lfoWave(0.2f, 0.5f);
+	return x * lfoWave(0.4f, 0.5f);
 }
 
 std::string Tremolo::getName() {

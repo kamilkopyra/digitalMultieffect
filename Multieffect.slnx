@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="Multieffect.vcxproj" />
+  <Project Path="Multieffect.vcxproj" Id="c7d8a9e7-0a3f-46d9-85cd-4fbf8006c93f" />
 </Solution>
