@@ -3,14 +3,20 @@
 #include <cmath>
 
 #define FramesPerBuffer  64
-#define clipRange        0.05f
 
 class Fuzz : public Effect
 {
-    float process(float sample=32) override;
+public:
+    float process(float sample) override;
+    std::string getName() override;
+    
+private:
+    float gain = 0.0f;
+    float volume = 0.0f;
+	float clipRange = 0.2f;
     float hardClipping(float x);
     float softClipping(float x, float drive);
-    std::string getName() override;
+	void scalePotValues(int pot0, int pot1, int pot2);
 
 };
 

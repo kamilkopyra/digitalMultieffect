@@ -10,7 +10,7 @@ class AudioEngine
 
     private:
 
-        #define sampleRate       44100
+        #define sampleRate       48000
 		PaStream* stream = nullptr;   // Wskaźnik na otwarty strumień audio
         Effect* effect = nullptr;
 
@@ -19,6 +19,7 @@ class AudioEngine
             const PaStreamCallbackTimeInfo* timeInfo,
             PaStreamCallbackFlags statusFlags,
             void* userData);
+        
 
 
 
@@ -27,5 +28,6 @@ class AudioEngine
             void setEffect(Effect* e);
             void stop();
 			bool isActive();
+            int pot[3] = { 0, 0, 0 };
 };
 

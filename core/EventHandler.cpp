@@ -51,3 +51,49 @@ void EventHandler::run() {
 		handleKey(key);
 	}
 }
+
+bool EventHandler::openSerial(const std::string& portName, int baudRate) {
+	try {
+		port.open(portName);
+		port.set_option(boost::asio::serial_port::baud_rate(baudRate));
+		port.set_option(boost::asio::serial_port::character_size(8));
+		port.set_option(boost::asio::serial_port::stop_bits(boost::asio::serial_port::stop_bits::one));
+		port.set_option(boost::asio::serial_port::parity(boost::asio::serial_port::parity::none));
+		asyncRead();
+		return true;
+	}
+	catch (const std::exception& e) {
+		std::cerr << "Błąd otwierania portu: " << e.what() << "\n";
+		return false;
+	}
+}
+
+void EventHandler::asyncRead() {
+	boost::asio::async_read_until(port, serialBuffer, '\n',
+		[this](const boost::system::error_code& ec, std::size_t bytes) {
+			onLineReceived(ec, bytes);
+		});
+}
+
+void EventHandler::onLineReceived(const boost::system::error_code& ec, std::size_t bytes) {
+	if (ec) return;
+
+	std::istream stream(&serialBuffer);
+	std::string line;
+	std::getline(stream, line);
+
+	int a, b, c;
+	if (sscanf_s(line.c_str(), "POT1: %d  POT2: %d  POT3: %d", &a, &b, &c) == 3) {
+		pot[0] = a;
+		pot[1] = b;
+		pot[2] = c;
+		//std::cout << "pot0=" << pot[0] << " pot1=" << pot[1] << " pot2=" << pot[2] << "\n";
+	}
+
+	asyncRead();
+}
+
+void EventHandler::runSerial() {
+	io.run(); 
+}
+

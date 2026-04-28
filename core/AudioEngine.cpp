@@ -3,28 +3,31 @@
 
 int AudioEngine::init_single_effect(int FramesPerBuffer)
 {
+   
     PaError err = Pa_Initialize();
     if (err != paNoError) {
         std::cerr << "Init error: " << Pa_GetErrorText(err) << std::endl;
         return 1;
     }
 
-    // Wypisz listę urządzeń
     int numDev = Pa_GetDeviceCount();
     std::cout << "=== PortAudio devices ===\n";
     for (int i = 0; i < numDev; ++i)
-        std::cout << i << ": " << Pa_GetDeviceInfo(i)->name << "\n";
+        std::cout << i << ": " << Pa_GetDeviceInfo(i)->name
+        << " (in=" << Pa_GetDeviceInfo(i)->maxInputChannels
+        << " out=" << Pa_GetDeviceInfo(i)->maxOutputChannels << ")\n";
     std::cout << "=========================\n";
 
-    // Automatyczne wybieranie
     PaStreamParameters inParams{}, outParams{};
-    int inDev = Pa_GetDefaultInputDevice();
-    int outDev = Pa_GetDefaultOutputDevice();
+    int inDev = -1;
+    int outDev = -1;
 
+    // Szukamy UMC22 — to urządzenie z 2 kanałami wejściowymi i nazwą "USB Audio"
     for (int i = 0; i < numDev; ++i) {
         const PaDeviceInfo* info = Pa_GetDeviceInfo(i);
         std::string name(info->name);
-        if (name.find("USB Audio") != std::string::npos && info->maxInputChannels > 0) {
+        // szukamy nazwy zaczynającej się od "Mikrofon (USB" — wykluczamy "Mikrofon (2 — USB"
+        if (name.find("(USB Audio CODEC)") != std::string::npos && info->maxInputChannels > 0) {
             inDev = i;
             break;
         }
@@ -32,28 +35,32 @@ int AudioEngine::init_single_effect(int FramesPerBuffer)
     for (int i = 0; i < numDev; ++i) {
         const PaDeviceInfo* info = Pa_GetDeviceInfo(i);
         std::string name(info->name);
-        if (name.find("USB Audio") != std::string::npos && info->maxOutputChannels > 0) {
+        if (name.find("(USB Audio CODEC)") != std::string::npos && info->maxOutputChannels > 0) {
             outDev = i;
             break;
         }
     }
-    std::cout << "Wejście = " << inDev << ", Wyjście = " << outDev << "\n";
 
-    // Parametry wejścia
+    if (inDev == -1 || outDev == -1) {
+        std::cerr << "Nie znaleziono UMC22\n";
+        return 1;
+    }
+
+    std::cout << "Wybrano wejście = " << inDev << ": " << Pa_GetDeviceInfo(inDev)->name << "\n";
+    std::cout << "Wybrano wyjście = " << outDev << ": " << Pa_GetDeviceInfo(outDev)->name << "\n";
+
     inParams.device = inDev;
-    inParams.channelCount = 1;
+    inParams.channelCount = 2;  // ważne — żeby dostać INST 2 jako prawy kanał
     inParams.sampleFormat = paFloat32;
     inParams.suggestedLatency = Pa_GetDeviceInfo(inDev)->defaultLowInputLatency;
     inParams.hostApiSpecificStreamInfo = nullptr;
 
-    // Parametry wyjścia
     outParams.device = outDev;
     outParams.channelCount = 2;
     outParams.sampleFormat = paFloat32;
     outParams.suggestedLatency = Pa_GetDeviceInfo(outDev)->defaultLowOutputLatency;
     outParams.hostApiSpecificStreamInfo = nullptr;
 
-    
     err = Pa_OpenStream(&stream, &inParams, &outParams,
         sampleRate, FramesPerBuffer,
         paClipOff, audioCallback, this);
@@ -76,6 +83,11 @@ void AudioEngine::setEffect(Effect* e)
 {
     delete effect;   //usuwam stary efekt
 	effect = e;     //zapisuję wskaźnik na nowy efekt
+    
+    if (effect) 
+    {
+        effect->setPot(pot);
+    }
 }
 
 int AudioEngine::audioCallback(const void* inputBuffer, void* outputBuffer,
@@ -100,8 +112,13 @@ int AudioEngine::audioCallback(const void* inputBuffer, void* outputBuffer,
     if (!in) return paContinue;
 
     for (unsigned i = 0; i < framesPerBuffer; ++i) {
-        float sample = *in++;
+        float left = *in++;   
+        float right = *in++;  
+
+        float sample = right; 
+
         float modified = engine->effect ? engine->effect->process(sample) : sample;
+
         *out++ = modified;
         *out++ = modified;
     }

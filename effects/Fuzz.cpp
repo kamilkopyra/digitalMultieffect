@@ -2,11 +2,13 @@
 
 float Fuzz::process(float sample) {
 
-    float clipped = hardClipping(sample) * (1.0f / clipRange);
-    //float driven = softClipping(sample, 5.0f);
+    scalePotValues(pot[0], pot[1], pot[2]);
+    float driven = sample * gain;
+    float clipped = hardClipping(driven);
+	//float clipped = softClipping(driven, volume); 
+    
 
-    return clipped;
-
+    return clipped * volume;
 }
 
 
@@ -22,5 +24,11 @@ float Fuzz::softClipping(float x, float drive) {
 
 std:: string Fuzz::getName() {
     return "Fuzz";
+}
+
+void Fuzz::scalePotValues(int pot0, int pot1, int pot2) {
+    gain = (pot0 / 1023.0f) * 10.0f; 
+    volume = (pot1 / 1023.0f); 
+    clipRange = 0.01f + (pot2 / 1023.0f) * 0.3f; 
 }
 
