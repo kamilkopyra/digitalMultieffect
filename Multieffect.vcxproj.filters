@@ -60,10 +60,13 @@
     <ClInclude Include="effects\NoiseGate.h">
       <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
-    <ClInclude Include="effects\Overdrive.h">
+    <ClInclude Include="effects\Rat.h">
       <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
     <ClInclude Include="effects\Phaser.h">
+      <Filter>Pliki nagłówkowe\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="TubeScreamer.h">
       <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
   </ItemGroup>
@@ -89,7 +92,7 @@
     <ClCompile Include="effects\NoiseGate.cpp">
       <Filter>Pliki źródłowe\effects</Filter>
     </ClCompile>
-    <ClCompile Include="effects\Overdrive.cpp">
+    <ClCompile Include="effects\Rat.cpp">
       <Filter>Pliki źródłowe\effects</Filter>
     </ClCompile>
     <ClCompile Include="effects\Phaser.cpp">
@@ -111,6 +114,9 @@
       <Filter>Pliki źródłowe\effects</Filter>
     </ClCompile>
     <ClCompile Include="effects\Equalizer.cpp">
+      <Filter>Pliki źródłowe\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\TubeScreamer.cpp">
       <Filter>Pliki źródłowe\effects</Filter>
     </ClCompile>
   </ItemGroup>

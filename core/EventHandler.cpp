@@ -3,7 +3,8 @@
 #include "Tremolo.h"
 #include "NoiseGate.h"
 #include "Tuner.h"
-
+#include "Overdrive.h"
+#include "TubeScreamer.h"
 
 void EventHandler::handleKey(char key)
 {
@@ -25,6 +26,16 @@ void EventHandler::handleKey(char key)
 	}
 	case '4': {
 		engine->setEffect(new NoiseGate());
+		std::cout << "Wcisnieto klawisz: " << key << "\n";
+		break;
+	}
+	case '5': {
+		engine->setEffect(new Overdrive());
+		std::cout << "Wcisnieto klawisz: " << key << "\n";
+		break;
+	}
+	case '6': {
+		engine->setEffect(new TubeScreamer());
 		std::cout << "Wcisnieto klawisz: " << key << "\n";
 		break;
 	}

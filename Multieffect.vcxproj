@@ -139,9 +139,10 @@
     <ClInclude Include="effects\Fuzz.h" />
     <ClInclude Include="effects\Harmonizer.h" />
     <ClInclude Include="effects\NoiseGate.h" />
-    <ClInclude Include="effects\Overdrive.h" />
+    <ClInclude Include="effects\Rat.h" />
     <ClInclude Include="effects\Phaser.h" />
     <ClInclude Include="effects\Tremolo.h" />
+    <ClInclude Include="TubeScreamer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\AudioEngine.cpp" />
@@ -154,9 +155,10 @@
     <ClCompile Include="effects\Fuzz.cpp" />
     <ClCompile Include="effects\Harmonizer.cpp" />
     <ClCompile Include="effects\NoiseGate.cpp" />
-    <ClCompile Include="effects\Overdrive.cpp" />
+    <ClCompile Include="effects\Rat.cpp" />
     <ClCompile Include="effects\Phaser.cpp" />
     <ClCompile Include="effects\Tremolo.cpp" />
+    <ClCompile Include="effects\TubeScreamer.cpp" />
     <ClCompile Include="effects\Tuner.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
