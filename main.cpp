@@ -26,7 +26,7 @@ int main() {
 
     new Fuzz();
     engine.setEffect(new Fuzz());
-    engine.init_single_effect(16);
+    engine.init_single_effect(64);
 
     while (engine.isActive()) {
         Pa_Sleep(100);

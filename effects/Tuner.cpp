@@ -75,7 +75,7 @@ void Tuner::McLeod_Method(std::vector<float> fftBuffer)
     }
     energy = sqrt(energy / N);  // RMS
     //printf("energy: %.8f\n", energy);
-    if (energy < 0.3) {        // próg zależny od mikrofonu
+    if (energy < 0.0009) {        // próg zależny od mikrofonu
         meanFreq = 0.0;
         return;
         //printf("McLeod Method : %.1f\n", meanFreq);
@@ -84,8 +84,11 @@ void Tuner::McLeod_Method(std::vector<float> fftBuffer)
 
     else {
 
-        // 1. Obliczenie NSDF
-        for (int tau = 0; tau < N; tau++) {
+        int minTau = sampleRate / 1200;
+        int maxTau = std::min(sampleRate / 25, N / 2);
+
+        // NSDF tylko w potrzebnym zakresie
+        for (int tau = minTau; tau <= maxTau; tau++) {
             double numerator = 0.0;
             double denominator = 0.0;
             for (int i = 0; i < N - tau; i++) {
@@ -100,10 +103,8 @@ void Tuner::McLeod_Method(std::vector<float> fftBuffer)
         float peakValue = -1.0f;
         float maxScore = 0.0f;
 
-        int minTau = sampleRate / 1200;
-        int maxTau = std::min(sampleRate / 25, N / 2);
         std::vector<Candidate> candidates;
-        float maxNsdf = *max_element(nsdf.begin() + 2, nsdf.begin() + maxTau);
+        float maxNsdf = *max_element(nsdf.begin() + minTau, nsdf.begin() + maxTau);
         //printf("max NSDF: %.4f, energy: %.6f\n", maxNsdf, energy);
 
         for (int tau = minTau; tau < maxTau - 1; tau++) {
@@ -129,6 +130,17 @@ void Tuner::McLeod_Method(std::vector<float> fftBuffer)
         }
 
         if (peakIndex < 2) return;
+
+        // czy to sub-oktawa? sprawdź czy jest peak przy połowie tau
+        for (auto& c : candidates) {
+            if (c.tau > peakIndex * 0.45 && c.tau < peakIndex * 0.55
+                && c.value > 0.5f * candidates[0].value) {
+                peakIndex = c.tau;
+                break;
+            }
+        }
+
+        if (peakIndex < 2) return;
         int size = candidates.size();
 
         float LN = nsdf[peakIndex - 1];
@@ -143,18 +155,21 @@ void Tuner::McLeod_Method(std::vector<float> fftBuffer)
 
         float rawFreq = interpolatedFreq;
 
-        if (freqHistory.size() >= 3) {
-            std::vector<float> sorted = freqHistory;
-            std::sort(sorted.begin(), sorted.end());
-            float currentMedian = sorted[sorted.size() / 2];
-            if (abs(rawFreq - currentMedian) > 300) return;
-        }
-        freqHistory.push_back(rawFreq);
-        if (freqHistory.size() > 10)
-            freqHistory.erase(freqHistory.begin());
+        {
+            std::lock_guard<std::mutex> lock(historyMutex);
+            if (freqHistory.size() >= 3) {
+                std::vector<float> sorted = freqHistory;
+                std::sort(sorted.begin(), sorted.end());
+                float currentMedian = sorted[sorted.size() / 2];
+                if (abs(rawFreq - currentMedian) > 300) return;
+            }
+            freqHistory.push_back(rawFreq);
+            if (freqHistory.size() > 10)
+                freqHistory.erase(freqHistory.begin());
 
-        if (freqHistory.size() < 3) {
-            return;
+            if (freqHistory.size() < 3) {
+                return;
+            }
         }
 
         std::vector<float> sorted = freqHistory;

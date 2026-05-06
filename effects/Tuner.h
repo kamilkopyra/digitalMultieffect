@@ -27,7 +27,7 @@ public:
 
 private:
 
-
+    std::mutex historyMutex;
     struct Candidate {
         int tau;
         float freq;

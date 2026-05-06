@@ -4,7 +4,7 @@
 class Effect
 {
 public:
-#define sampleRate       44100
+#define sampleRate       48000
 
 
 	virtual float process(float sample) = 0;

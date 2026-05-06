@@ -3,7 +3,7 @@
 #include "Tremolo.h"
 #include "NoiseGate.h"
 #include "Tuner.h"
-#include "Overdrive.h"
+#include "Rat.h"
 #include "TubeScreamer.h"
 
 void EventHandler::handleKey(char key)
@@ -30,7 +30,7 @@ void EventHandler::handleKey(char key)
 		break;
 	}
 	case '5': {
-		engine->setEffect(new Overdrive());
+		engine->setEffect(new Rat());
 		std::cout << "Wcisnieto klawisz: " << key << "\n";
 		break;
 	}

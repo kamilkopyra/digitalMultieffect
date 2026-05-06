@@ -142,6 +142,7 @@
     <ClInclude Include="effects\Rat.h" />
     <ClInclude Include="effects\Phaser.h" />
     <ClInclude Include="effects\Tremolo.h" />
+    <ClInclude Include="effects\Tuner.h" />
     <ClInclude Include="TubeScreamer.h" />
   </ItemGroup>
   <ItemGroup>
