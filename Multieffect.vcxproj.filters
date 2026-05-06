@@ -25,6 +25,12 @@
     <Filter Include="Pliki źródłowe\effects">
       <UniqueIdentifier>{7131d106-92fe-41c0-8b10-d8a44ed2fa7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pliki nagłówkowe\effects\finished">
+      <UniqueIdentifier>{80044ac3-8171-4033-9bf6-5a29759287fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki źródłowe\effects\finished">
+      <UniqueIdentifier>{1d7d12ef-3a3f-4397-9bdf-d68a48c3cb95}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\AudioEngine.h">
@@ -35,9 +41,6 @@
     </ClInclude>
     <ClInclude Include="core\Effect.h">
       <Filter>Pliki nagłówkowe\core</Filter>
-    </ClInclude>
-    <ClInclude Include="effects\Tremolo.h">
-      <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
     <ClInclude Include="effects\AutoWah.h">
       <Filter>Pliki nagłówkowe\effects</Filter>
@@ -51,26 +54,29 @@
     <ClInclude Include="effects\Equalizer.h">
       <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
-    <ClInclude Include="effects\Fuzz.h">
-      <Filter>Pliki nagłówkowe\effects</Filter>
-    </ClInclude>
     <ClInclude Include="effects\Harmonizer.h">
       <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
     <ClInclude Include="effects\NoiseGate.h">
       <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
-    <ClInclude Include="effects\Rat.h">
-      <Filter>Pliki nagłówkowe\effects</Filter>
-    </ClInclude>
     <ClInclude Include="effects\Phaser.h">
       <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
+    <ClInclude Include="effects\Fuzz.h">
+      <Filter>Pliki nagłówkowe\effects\finished</Filter>
+    </ClInclude>
+    <ClInclude Include="effects\Rat.h">
+      <Filter>Pliki nagłówkowe\effects\finished</Filter>
+    </ClInclude>
     <ClInclude Include="TubeScreamer.h">
-      <Filter>Pliki nagłówkowe\effects</Filter>
+      <Filter>Pliki nagłówkowe\effects\finished</Filter>
     </ClInclude>
     <ClInclude Include="effects\Tuner.h">
-      <Filter>Pliki nagłówkowe\effects</Filter>
+      <Filter>Pliki nagłówkowe\effects\finished</Filter>
+    </ClInclude>
+    <ClInclude Include="effects\Tremolo.h">
+      <Filter>Pliki nagłówkowe\effects\finished</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -95,16 +101,7 @@
     <ClCompile Include="effects\NoiseGate.cpp">
       <Filter>Pliki źródłowe\effects</Filter>
     </ClCompile>
-    <ClCompile Include="effects\Rat.cpp">
-      <Filter>Pliki źródłowe\effects</Filter>
-    </ClCompile>
     <ClCompile Include="effects\Phaser.cpp">
-      <Filter>Pliki źródłowe\effects</Filter>
-    </ClCompile>
-    <ClCompile Include="effects\Tremolo.cpp">
-      <Filter>Pliki źródłowe\effects</Filter>
-    </ClCompile>
-    <ClCompile Include="effects\Tuner.cpp">
       <Filter>Pliki źródłowe\effects</Filter>
     </ClCompile>
     <ClCompile Include="effects\AutoWah.cpp">
@@ -119,8 +116,17 @@
     <ClCompile Include="effects\Equalizer.cpp">
       <Filter>Pliki źródłowe\effects</Filter>
     </ClCompile>
+    <ClCompile Include="effects\Tremolo.cpp">
+      <Filter>Pliki źródłowe\effects\finished</Filter>
+    </ClCompile>
     <ClCompile Include="effects\TubeScreamer.cpp">
-      <Filter>Pliki źródłowe\effects</Filter>
+      <Filter>Pliki źródłowe\effects\finished</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\Tuner.cpp">
+      <Filter>Pliki źródłowe\effects\finished</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\Rat.cpp">
+      <Filter>Pliki źródłowe\effects\finished</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
