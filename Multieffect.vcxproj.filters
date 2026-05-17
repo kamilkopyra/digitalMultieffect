@@ -31,6 +31,12 @@
     <Filter Include="Pliki źródłowe\effects\finished">
       <UniqueIdentifier>{1d7d12ef-3a3f-4397-9bdf-d68a48c3cb95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pliki źródłowe\effects\notTouchedYet">
+      <UniqueIdentifier>{5d600e36-113b-42f0-8436-9ae052f52661}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki źródłowe\effects\work in progress">
+      <UniqueIdentifier>{cc77f9c7-fb4d-4c95-a94d-9ebc49fc9ae7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="core\AudioEngine.h">
@@ -57,9 +63,6 @@
     <ClInclude Include="effects\Harmonizer.h">
       <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
-    <ClInclude Include="effects\NoiseGate.h">
-      <Filter>Pliki nagłówkowe\effects</Filter>
-    </ClInclude>
     <ClInclude Include="effects\Phaser.h">
       <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
@@ -69,13 +72,16 @@
     <ClInclude Include="effects\Rat.h">
       <Filter>Pliki nagłówkowe\effects\finished</Filter>
     </ClInclude>
-    <ClInclude Include="TubeScreamer.h">
-      <Filter>Pliki nagłówkowe\effects\finished</Filter>
-    </ClInclude>
     <ClInclude Include="effects\Tuner.h">
       <Filter>Pliki nagłówkowe\effects\finished</Filter>
     </ClInclude>
     <ClInclude Include="effects\Tremolo.h">
+      <Filter>Pliki nagłówkowe\effects\finished</Filter>
+    </ClInclude>
+    <ClInclude Include="effects\NoiseGate.h">
+      <Filter>Pliki nagłówkowe\effects\finished</Filter>
+    </ClInclude>
+    <ClInclude Include="effects\TubeScreamer.h">
       <Filter>Pliki nagłówkowe\effects\finished</Filter>
     </ClInclude>
   </ItemGroup>
@@ -92,30 +98,6 @@
     <ClCompile Include="core\EventHandler.cpp">
       <Filter>Pliki źródłowe\core</Filter>
     </ClCompile>
-    <ClCompile Include="effects\Fuzz.cpp">
-      <Filter>Pliki źródłowe\effects</Filter>
-    </ClCompile>
-    <ClCompile Include="effects\Harmonizer.cpp">
-      <Filter>Pliki źródłowe\effects</Filter>
-    </ClCompile>
-    <ClCompile Include="effects\NoiseGate.cpp">
-      <Filter>Pliki źródłowe\effects</Filter>
-    </ClCompile>
-    <ClCompile Include="effects\Phaser.cpp">
-      <Filter>Pliki źródłowe\effects</Filter>
-    </ClCompile>
-    <ClCompile Include="effects\AutoWah.cpp">
-      <Filter>Pliki źródłowe\effects</Filter>
-    </ClCompile>
-    <ClCompile Include="effects\Compressor.cpp">
-      <Filter>Pliki źródłowe\effects</Filter>
-    </ClCompile>
-    <ClCompile Include="effects\Delay.cpp">
-      <Filter>Pliki źródłowe\effects</Filter>
-    </ClCompile>
-    <ClCompile Include="effects\Equalizer.cpp">
-      <Filter>Pliki źródłowe\effects</Filter>
-    </ClCompile>
     <ClCompile Include="effects\Tremolo.cpp">
       <Filter>Pliki źródłowe\effects\finished</Filter>
     </ClCompile>
@@ -127,6 +109,30 @@
     </ClCompile>
     <ClCompile Include="effects\Rat.cpp">
       <Filter>Pliki źródłowe\effects\finished</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\NoiseGate.cpp">
+      <Filter>Pliki źródłowe\effects\finished</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\Fuzz.cpp">
+      <Filter>Pliki źródłowe\effects\finished</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\Harmonizer.cpp">
+      <Filter>Pliki źródłowe\effects\notTouchedYet</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\AutoWah.cpp">
+      <Filter>Pliki źródłowe\effects\notTouchedYet</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\Equalizer.cpp">
+      <Filter>Pliki źródłowe\effects\notTouchedYet</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\Phaser.cpp">
+      <Filter>Pliki źródłowe\effects\notTouchedYet</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\Delay.cpp">
+      <Filter>Pliki źródłowe\effects\work in progress</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\Compressor.cpp">
+      <Filter>Pliki źródłowe\effects\work in progress</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -13,6 +13,9 @@ public:
     std::string getName() override;
 
 private:
+
+    float lowMid = 0.0f;
+    float highMid = 0.0f;
     float volume = 0.0f;
     float drive = 0.0f;
     float softClipping(float x, float drive);

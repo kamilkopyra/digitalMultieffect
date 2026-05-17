@@ -29,5 +29,7 @@ class AudioEngine
             void stop();
 			bool isActive();
             int pot[3] = { 0, 0, 0 };
+            Effect* getEffect();
+            
 };
 

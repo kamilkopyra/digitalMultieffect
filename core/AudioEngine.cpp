@@ -135,4 +135,8 @@ bool AudioEngine::isActive() {
     return Pa_IsStreamActive(stream) == 1;
 }
 
+Effect* AudioEngine::getEffect() 
+{
+    return effect;
+}
    

@@ -5,6 +5,8 @@
 #include "Tuner.h"
 #include "Rat.h"
 #include "TubeScreamer.h"
+#include "Delay.h"
+#include "Compressor.h"
 
 void EventHandler::handleKey(char key)
 {
@@ -12,33 +14,56 @@ void EventHandler::handleKey(char key)
 	case '1': {
 		engine->setEffect(new Fuzz());
 		std::cout << "Wcisnieto klawisz: " << key << "\n";
+		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
 		break;
 	}
 	case '2': {
 		engine->setEffect(new Tremolo());
 		std::cout << "Wcisnieto klawisz: " << key << "\n";
+		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
 		break;
 	}
 	case '3': {
 		engine->setEffect(new Tuner());
 		std::cout << "Wcisnieto klawisz: " << key << "\n";
+		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
 		break;
 	}
 	case '4': {
 		engine->setEffect(new NoiseGate());
 		std::cout << "Wcisnieto klawisz: " << key << "\n";
+		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
 		break;
 	}
 	case '5': {
 		engine->setEffect(new Rat());
 		std::cout << "Wcisnieto klawisz: " << key << "\n";
+		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
 		break;
 	}
 	case '6': {
 		engine->setEffect(new TubeScreamer());
 		std::cout << "Wcisnieto klawisz: " << key << "\n";
+		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
 		break;
 	}
+	case '7': {
+		engine->setEffect(new Delay());
+		std::cout << "Wcisnieto klawisz: " << key << "\n";
+		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
+		break;
+	}
+	case '8': {
+		engine->setEffect(new Compressor());
+		std::cout << "Wcisnieto klawisz: " << key << "\n";
+		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
+		break;
+	}
+
+
+
+
+
 	case '0': {
 		engine->setEffect(nullptr);
 		std::cout << "Wcisnieto klawisz: " << key << "\n";

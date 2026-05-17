@@ -24,9 +24,8 @@ int main() {
     std::cout << "Po openSerial\n";
    
 
-    new Fuzz();
     engine.setEffect(new Fuzz());
-    engine.init_single_effect(64);
+    engine.init_single_effect(16);
 
     while (engine.isActive()) {
         Pa_Sleep(100);

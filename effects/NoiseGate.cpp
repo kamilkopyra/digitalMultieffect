@@ -4,7 +4,7 @@
 float NoiseGate::process(float sample) {
 	scalePotValues(pot[0], pot[1], pot[2]);
 
-	// płynny envelope follower zamiast RMS na blokach
+	// envelope follower zamiast RMS
 	float level = fabsf(sample);
 	rms = rms + 0.001f * (level - rms);
 

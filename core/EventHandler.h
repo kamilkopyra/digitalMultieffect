@@ -27,6 +27,7 @@ private:
 
 	void asyncRead();
 	void onLineReceived(const boost::system::error_code& ec, std::size_t bytes);
+	void getNameFromEffect();
 
 };
 
