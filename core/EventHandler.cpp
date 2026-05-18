@@ -7,6 +7,8 @@
 #include "TubeScreamer.h"
 #include "Delay.h"
 #include "Compressor.h"
+#include "WavWriter.h"
+#include <filesystem>
 
 void EventHandler::handleKey(char key)
 {
@@ -60,18 +62,30 @@ void EventHandler::handleKey(char key)
 		break;
 	}
 
-
-
-
-
 	case '0': {
 		engine->setEffect(nullptr);
 		std::cout << "Wcisnieto klawisz: " << key << "\n";
 		break;
 	}
+
+	case 'r': {
+		if (engine->wavWriter.isRecording()) {
+			engine->wavWriter.stop();
+			std::cout << "Nagrywanie zatrzymane.\n";
+		}
+		else {
+			std::string nazwa = engine->getEffect() ? engine->getEffect()->getName() : "brak_efektu";
+			std::filesystem::create_directories("./recordings");
+			std::filesystem::path p = std::filesystem::absolute("./recordings/" + nazwa + ".wav");
+			std::cout << "Zapisuje do: " << p << "\n";
+			bool ok = engine->wavWriter.start("./recordings/" + nazwa + ".wav");
+			std::cout << (ok ? "Nagrywanie rozpoczete.\n" : "Blad otwarcia pliku!\n");
+		}
+		break;
+	}
 	case 'q': {
 		std::cout << "Wcisnieto klawisz: " << key << "\n";
-		exit(0);
+		engine->stop();
 		break;
 	}
 	default:

@@ -84,6 +84,9 @@
     <ClInclude Include="effects\TubeScreamer.h">
       <Filter>Pliki nagłówkowe\effects\finished</Filter>
     </ClInclude>
+    <ClInclude Include="core\WavWriter.h">
+      <Filter>Pliki nagłówkowe\core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -133,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="effects\Compressor.cpp">
       <Filter>Pliki źródłowe\effects\work in progress</Filter>
+    </ClCompile>
+    <ClCompile Include="core\WavWriter.cpp">
+      <Filter>Pliki źródłowe\core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

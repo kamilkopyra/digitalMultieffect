@@ -132,6 +132,7 @@
     <ClInclude Include="core\AudioEngine.h" />
     <ClInclude Include="core\Effect.h" />
     <ClInclude Include="core\EventHandler.h" />
+    <ClInclude Include="core\WavWriter.h" />
     <ClInclude Include="effects\AutoWah.h" />
     <ClInclude Include="effects\Compressor.h" />
     <ClInclude Include="effects\Delay.h" />
@@ -149,6 +150,7 @@
     <ClCompile Include="core\AudioEngine.cpp" />
     <ClCompile Include="core\Effect.cpp" />
     <ClCompile Include="core\EventHandler.cpp" />
+    <ClCompile Include="core\WavWriter.cpp" />
     <ClCompile Include="effects\AutoWah.cpp" />
     <ClCompile Include="effects\Compressor.cpp" />
     <ClCompile Include="effects\Delay.cpp" />
