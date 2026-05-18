@@ -3,6 +3,7 @@
 #include <portaudio.h>
 
 #include "Effect.h"
+#include "WavWriter.h"
 
 class AudioEngine
 {
@@ -19,11 +20,12 @@ class AudioEngine
             const PaStreamCallbackTimeInfo* timeInfo,
             PaStreamCallbackFlags statusFlags,
             void* userData);
-        
+            
 
 
 
     public:
+            WavWriter wavWriter;
 		    int init_single_effect(int buffer);
             void setEffect(Effect* e);
             void stop();

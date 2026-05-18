@@ -109,6 +109,8 @@ int AudioEngine::audioCallback(const void* inputBuffer, void* outputBuffer,
         printed = true;
     }
 
+  
+
     if (!in) return paContinue;
 
     for (unsigned i = 0; i < framesPerBuffer; ++i) {
@@ -118,6 +120,10 @@ int AudioEngine::audioCallback(const void* inputBuffer, void* outputBuffer,
         float sample = right; 
 
         float modified = engine->effect ? engine->effect->process(sample) : sample;
+
+
+        if (engine->wavWriter.isRecording())
+            engine->wavWriter.writeSample(modified);  
 
         *out++ = modified;
         *out++ = modified;
