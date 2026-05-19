@@ -51,7 +51,7 @@ void Delay::scalePotValues(int pot0, int pot1, int pot2) {
     float feedbackNorm = pot1 / 1023.0f;
     float mixNorm = pot2 / 1023.0f;
 
-    delayTimeMs = 40.0f + timeNorm * 760.0f;  // 40-800 ms
-    feedback = feedbackNorm * 0.75f;          // 0-0.75
+    delayTimeMs = 400.0f + timeNorm * 1200.0f;  // 400-1600 ms
+    feedback = feedbackNorm * 0.4f;          // 0-0.4
     mix = mixNorm * 0.65f;                    // 0-0.65
 }

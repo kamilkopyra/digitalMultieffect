@@ -23,7 +23,7 @@ float Rat::process(float sample) {
 }
 
 float Rat::ratClipping(float x) {
-    // twardy, ale nie całkiem ordynarny clip
+    
     const float clip = 0.45f;
 
     if (x > clip) {
