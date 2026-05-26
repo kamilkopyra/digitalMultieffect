@@ -157,13 +157,3 @@ Effect* AudioEngine::getEffect()
     return effect;
 }
    
-
-void AudioEngine::onEncoderTurn(int idx, int dir) {
-    pot[idx] = std::clamp(pot[idx] + dir * 2, 0, 100);
-    if (effect)
-        std::cout << effect->getName() << " - " << effect->getParamName(idx) << ": " << pot[idx] << "\n";
-}
-
-void AudioEngine::onEncoderButton(int idx) {
-    std::cout << "Przycisk enkodera " << idx << "\n";
-}

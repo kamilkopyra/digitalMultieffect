@@ -18,6 +18,9 @@ public:
 	bool openSerial(const std::string& portName, int baudRate = 9600);
 	void runSerial(); // wywołaj w osobnym wątku
 
+	void onEncoderTurn(int idx, int dir);
+	void onEncoderButton(int idx);
+
 private:
 	int* pot;
 	AudioEngine* engine;

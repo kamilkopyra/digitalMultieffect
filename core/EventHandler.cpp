@@ -154,10 +154,10 @@ void EventHandler::onLineReceived(const boost::system::error_code& ec, std::size
 	int idx, dir;
 
 	if (sscanf_s(line.c_str(), "E %d %d", &idx, &dir) == 2) {
-		engine->onEncoderTurn(idx, dir);
+		onEncoderTurn(idx, dir);
 	}
 	else if (sscanf_s(line.c_str(), "B %d", &idx) == 1) {
-		engine->onEncoderButton(idx);
+		onEncoderButton(idx);
 	}
 
 	asyncRead();
@@ -167,4 +167,40 @@ void EventHandler::onLineReceived(const boost::system::error_code& ec, std::size
 void EventHandler::runSerial() {
 	io.run(); 
 }
+
+void EventHandler::onEncoderTurn(int idx, int dir) {
+	engine->pot[idx] = std::clamp(engine->pot[idx] + dir * 2, 0, 100);
+	if (engine->getEffect())
+		std::cout << engine->getEffect()->getName() << " - "
+		<< engine->getEffect()->getParamName(idx) << ": "
+		<< engine->pot[idx] << "\n";
+}
+
+
+
+
+
+void EventHandler::onEncoderButton(int idx) {
+	if (idx == 0 && engine->getEffect() && engine->getEffect()->isModulation()) {
+		static clock_t taps[4] = { 0, 0, 0, 0 };
+		static int tapCount = 0;
+
+		taps[tapCount % 4] = clock();
+		tapCount++;
+
+		if (tapCount >= 2) {
+			int count = std::min(tapCount, 4);
+			float avgMs = (float)(taps[(tapCount - 1) % 4] - taps[(tapCount - count) % 4])
+				/ (count - 1) / CLOCKS_PER_SEC * 1000.0f;
+			float bpm = 60000.0f / avgMs;
+
+			engine->getEffect()->TapToParam(avgMs);
+			std::cout << "Tap tempo: " << bpm << " BPM\n";
+		}
+	}
+	else {
+		std::cout << "Przycisk enkodera " << idx << "\n";
+	}
+}
+
 

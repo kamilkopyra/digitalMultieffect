@@ -36,8 +36,5 @@ class AudioEngine
             int pot[3] = { 0, 0, 0 };
             Effect* getEffect();
 
-            void onEncoderTurn(int idx, int dir);
-            void onEncoderButton(int idx);
-            
 };
 

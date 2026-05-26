@@ -1,4 +1,5 @@
 #include "Tremolo.h"
+#include <algorithm>
 
 
 float Tremolo::process(float sample) {
@@ -40,4 +41,10 @@ std::string Tremolo::getParamName(int idx) {
 	case 2: return "None";
 	default: return "?";
 	}
+}
+
+
+void Tremolo::TapToParam(float ms) {
+	float hz = 1000.0f / ms;  // ms na Hz
+	pot[0] = std::clamp((int)(hz / 10.0f * 100.0f), 0, 100);
 }
