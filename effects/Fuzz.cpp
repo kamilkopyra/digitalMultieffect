@@ -21,8 +21,17 @@ std:: string Fuzz::getName() {
 }
 
 void Fuzz::scalePotValues(int pot0, int pot1, int pot2) {
-    gain = (pot0 / 1023.0f) * 10.0f; 
-    volume = (pot1 / 1023.0f); 
-    clipRange = 0.32f - (0.01f + (pot2 / 1023.0f) * 0.3f);
+    gain = (pot0 / 100.0f) * 10.0f; 
+    volume = (pot1 / 100.0f); 
+    clipRange = 0.32f - (0.01f + (pot2 / 100.0f) * 0.3f);
+}
+
+std::string Fuzz::getParamName(int idx) {
+    switch (idx) {
+    case 0: return "Gain";
+    case 1: return "Volume";
+    case 2: return "Clip";
+    default: return "?";
+    }
 }
 

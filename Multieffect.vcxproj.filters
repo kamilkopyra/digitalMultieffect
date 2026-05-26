@@ -131,14 +131,14 @@
     <ClCompile Include="effects\Phaser.cpp">
       <Filter>Pliki źródłowe\effects\notTouchedYet</Filter>
     </ClCompile>
-    <ClCompile Include="effects\Delay.cpp">
-      <Filter>Pliki źródłowe\effects\work in progress</Filter>
-    </ClCompile>
     <ClCompile Include="effects\Compressor.cpp">
       <Filter>Pliki źródłowe\effects\work in progress</Filter>
     </ClCompile>
     <ClCompile Include="core\WavWriter.cpp">
       <Filter>Pliki źródłowe\core</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\Delay.cpp">
+      <Filter>Pliki źródłowe\effects\finished</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

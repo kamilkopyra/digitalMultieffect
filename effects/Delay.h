@@ -10,6 +10,8 @@ public:
 
     float process(float sample) override;
     std::string getName() override;
+    std::string getParamName(int idx) override;
+    std::array<int, 3> getDefaultParams() override { return { 100, 80, 100 }; }
 private:
     static constexpr float maxDelaySeconds = 1.0f;
     static constexpr int bufferSize = static_cast<int>(sampleRate * maxDelaySeconds);

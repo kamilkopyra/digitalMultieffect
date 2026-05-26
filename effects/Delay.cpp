@@ -47,11 +47,20 @@ std::string Delay::getName() {
 }
 
 void Delay::scalePotValues(int pot0, int pot1, int pot2) {
-    float timeNorm = pot0 / 1023.0f;
-    float feedbackNorm = pot1 / 1023.0f;
-    float mixNorm = pot2 / 1023.0f;
+    float timeNorm = pot0 / 100.0f;
+    float feedbackNorm = pot1 / 100.0f;
+    float mixNorm = pot2 / 100.0f;
 
     delayTimeMs = 400.0f + timeNorm * 1200.0f;  // 400-1600 ms
     feedback = feedbackNorm * 0.4f;          // 0-0.4
     mix = mixNorm * 0.65f;                    // 0-0.65
+}
+
+std::string Delay::getParamName(int idx) {
+    switch (idx) {
+    case 0: return "Time";
+    case 1: return "Feedback";
+    case 2: return "Mix";
+    default: return "?";
+    }
 }

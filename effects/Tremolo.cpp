@@ -27,9 +27,17 @@ float Tremolo::lfoWave(float frequency, float depth) {
 
 float Tremolo::scalePotValues(int pot0, int pot1) {
 
-	float frequency = (pot0 / 1023.0f) * 10.0f; // Skaluje pot0 do zakresu 0-10 Hz
-	float depth = (pot1 / 1023.0f); 
+	float frequency = (pot0 / 100.0f) * 10.0f; // Skaluje pot0 do zakresu 0-10 Hz
+	float depth = (pot1 / 100.0f); 
 	return lfoWave(frequency, depth);
 
 }
 
+std::string Tremolo::getParamName(int idx) {
+	switch (idx) {
+	case 0: return "frequency";
+	case 1: return "depth";
+	case 2: return "None";
+	default: return "?";
+	}
+}

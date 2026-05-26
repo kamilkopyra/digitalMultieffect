@@ -1,4 +1,5 @@
 #include "AudioEngine.h"
+#include <algorithm>
 
 
 int AudioEngine::init_single_effect(int FramesPerBuffer)
@@ -79,13 +80,23 @@ int AudioEngine::init_single_effect(int FramesPerBuffer)
     return 0;
 }
 
-void AudioEngine::setEffect(Effect* e)
-{
-    delete effect;   //usuwam stary efekt
-	effect = e;     //zapisuję wskaźnik na nowy efekt
-    
-    if (effect) 
-    {
+void AudioEngine::setEffect(Effect* e) {
+    if (effect) {
+        effectParams[effect->getName()] = { pot[0], pot[1], pot[2] };
+    }
+
+    delete effect;
+    effect = e;
+
+    if (effect) {
+        if (effectParams.count(effect->getName())) {
+            auto& p = effectParams[effect->getName()];
+            pot[0] = p[0]; pot[1] = p[1]; pot[2] = p[2];
+        }
+        else {
+            auto defaults = effect->getDefaultParams();
+            pot[0] = defaults[0]; pot[1] = defaults[1]; pot[2] = defaults[2];
+        }
         effect->setPot(pot);
     }
 }
@@ -146,3 +157,13 @@ Effect* AudioEngine::getEffect()
     return effect;
 }
    
+
+void AudioEngine::onEncoderTurn(int idx, int dir) {
+    pot[idx] = std::clamp(pot[idx] + dir * 2, 0, 100);
+    if (effect)
+        std::cout << effect->getName() << " - " << effect->getParamName(idx) << ": " << pot[idx] << "\n";
+}
+
+void AudioEngine::onEncoderButton(int idx) {
+    std::cout << "Przycisk enkodera " << idx << "\n";
+}

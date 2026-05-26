@@ -49,7 +49,16 @@ float NoiseGate::calcRMS(float buffer[]) {
 }
 
 void NoiseGate::scalePotValues(int pot0, int pot1, int pot2) {
-	threshold = (pot0 / 1023.0f) /5 ; 
-	attack_coeff = 0.0005f + (pot1 / 1023.0f) * 0.005f;  
-	release_coeff = 0.00005f + (pot1 / 1023.0f) * 0.005f; 
+	threshold = (pot0 / 100.0) /5 ; 
+	attack_coeff = 0.0005f + (pot1 / 100.0f) * 0.005f;  
+	release_coeff = 0.00005f + (pot1 / 100.0f) * 0.005f; 
+}
+
+std::string NoiseGate::getParamName(int idx) {
+	switch (idx) {
+	case 0: return "threshold";
+	case 1: return "attack_coeff";
+	case 2: return "release_coeff";
+	default: return "?";
+	}
 }

@@ -25,6 +25,8 @@ public:
         double frequency;
     };
 
+    std::string getParamName(int idx) override;
+    std::array<int, 3> getDefaultParams() override { return { 100, 80, 100 }; }
 private:
 
     std::mutex historyMutex;
@@ -42,4 +44,5 @@ private:
     void McLeod_Method(std::vector<float> buffer);
     void printTuner(float freq, float target, float cents, const std::string& stringName);
     inline float median3(float a, float b, float c);
+
 };

@@ -58,9 +58,9 @@ std::string Compressor::getName() {
 
 void Compressor::scalePotValues(int pot0, int pot1, int pot2) {
 
-    float thresholdNorm = pot0 / 1023.0f;
-    float ratioNorm = pot1 / 1023.0f;
-    float makeupNorm = pot2 / 1023.0f;
+    float thresholdNorm = pot0 / 100.0;
+    float ratioNorm = pot1 / 100.0f;
+    float makeupNorm = pot2 / 100.0f;
 
     // pot0 większy = mocniej łapie sygnał
     threshold = 0.35f - thresholdNorm * 0.29f;
@@ -77,4 +77,13 @@ void Compressor::scalePotValues(int pot0, int pot1, int pot2) {
 
     
     releaseCoeff = 0.0015f;
+}
+
+std::string Compressor::getParamName(int idx) {
+    switch (idx) {
+    case 0: return "treshold";
+    case 1: return "ratio";
+    case 2: return "makeupGain";
+    default: return "?";
+    }
 }

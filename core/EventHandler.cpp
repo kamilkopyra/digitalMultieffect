@@ -125,6 +125,24 @@ void EventHandler::asyncRead() {
 		});
 }
 
+//void EventHandler::onLineReceived(const boost::system::error_code& ec, std::size_t bytes) {
+//	if (ec) return;
+//
+//	std::istream stream(&serialBuffer);
+//	std::string line;
+//	std::getline(stream, line);
+//
+//	int a, b, c;
+//	if (sscanf_s(line.c_str(), "POT1: %d  POT2: %d  POT3: %d", &a, &b, &c) == 3) {
+//		pot[0] = a;
+//		pot[1] = b;
+//		pot[2] = c;
+//		//std::cout << "pot0=" << pot[0] << " pot1=" << pot[1] << " pot2=" << pot[2] << "\n";
+//	}
+//
+//	asyncRead();
+//}
+
 void EventHandler::onLineReceived(const boost::system::error_code& ec, std::size_t bytes) {
 	if (ec) return;
 
@@ -132,16 +150,19 @@ void EventHandler::onLineReceived(const boost::system::error_code& ec, std::size
 	std::string line;
 	std::getline(stream, line);
 
-	int a, b, c;
-	if (sscanf_s(line.c_str(), "POT1: %d  POT2: %d  POT3: %d", &a, &b, &c) == 3) {
-		pot[0] = a;
-		pot[1] = b;
-		pot[2] = c;
-		//std::cout << "pot0=" << pot[0] << " pot1=" << pot[1] << " pot2=" << pot[2] << "\n";
+	char type;
+	int idx, dir;
+
+	if (sscanf_s(line.c_str(), "E %d %d", &idx, &dir) == 2) {
+		engine->onEncoderTurn(idx, dir);
+	}
+	else if (sscanf_s(line.c_str(), "B %d", &idx) == 1) {
+		engine->onEncoderButton(idx);
 	}
 
 	asyncRead();
 }
+
 
 void EventHandler::runSerial() {
 	io.run(); 

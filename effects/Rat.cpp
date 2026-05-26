@@ -42,11 +42,20 @@ std::string Rat::getName() {
 }
 
 void Rat::scalePotValues(int pot0, int pot1, int pot2) {
-    float driveNorm = pot0 / 1023.0f;
-    float volumeNorm = pot1 / 1023.0f;
-    float toneNorm = pot2 / 1023.0f;
+    float driveNorm = pot0 / 100.0f;
+    float volumeNorm = pot1 / 100.0f;
+    float toneNorm = pot2 / 100.0f;
 
     drive = 4.0f + driveNorm * 55.0f;
     volume = volumeNorm * 0.15f;
     tone = 0.09f + toneNorm * 0.20f;
+}
+
+std::string Rat::getParamName(int idx) {
+    switch (idx) {
+    case 0: return "drive";
+    case 1: return "volume";
+    case 2: return "tone";
+    default: return "?";
+    }
 }

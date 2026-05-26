@@ -4,6 +4,9 @@
 
 #include "Effect.h"
 #include "WavWriter.h"
+#include <map>
+#include <array>
+#include <string>
 
 class AudioEngine
 {
@@ -22,7 +25,7 @@ class AudioEngine
             void* userData);
             
 
-
+        std::map<std::string, std::array<int, 3>> effectParams;
 
     public:
             WavWriter wavWriter;
@@ -32,6 +35,9 @@ class AudioEngine
 			bool isActive();
             int pot[3] = { 0, 0, 0 };
             Effect* getEffect();
+
+            void onEncoderTurn(int idx, int dir);
+            void onEncoderButton(int idx);
             
 };
 

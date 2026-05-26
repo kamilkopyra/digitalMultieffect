@@ -25,8 +25,17 @@ std::string TubeScreamer::getName() {
 }
 
 void TubeScreamer::scalePotValues(int pot0, int pot1, int pot2) {
-    drive = 2.0f + (pot[0] / 1023.0f) * 12.0f;   // 2-10
-    volume = pot[1] / 1023.0f;
-    tone = 0.05f + (pot[2] / 1023.0f) * 0.95f;   
+    drive = 2.0f + (pot[0] / 100.0f) * 12.0f;   // 2-10
+    volume = pot[1] / 100.0f;
+    tone = 0.05f + (pot[2] / 100.0f) * 0.95f;   
+}
+
+std::string TubeScreamer::getParamName(int idx) {
+    switch (idx) {
+    case 0: return "drive";
+    case 1: return "volume";
+    case 2: return "tone";
+    default: return "?";
+    }
 }
 

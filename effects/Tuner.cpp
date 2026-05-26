@@ -5,6 +5,8 @@
 // problem z wykrywaniem - czasami wykrywana jest harmoniczna zamiast częstotliwości podstawowek
 // problem z czułością - czasami wykrywana jest częstotliwość, ale jest ona bardzo niestabilna
 
+// problemy zostały rozwiązane
+
 
 float Tuner::process(float sample) {
 
@@ -243,4 +245,9 @@ std::string Tuner::getClosestName(float maxFreq)
         }
     }
     return closestName;
+}
+
+std::string Tuner::getParamName(int idx) {
+
+    return "?";
 }

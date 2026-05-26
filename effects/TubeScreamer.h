@@ -11,7 +11,8 @@ class TubeScreamer : public Effect
 public:
     float process(float sample) override;
     std::string getName() override;
-
+    std::string getParamName(int idx) override;
+    std::array<int, 3> getDefaultParams() override { return { 100, 80, 100 }; }
 private:
 
     float lowMid = 0.0f;

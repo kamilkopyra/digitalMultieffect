@@ -3,6 +3,7 @@
 #include "Effect.h"
 #include <iostream>
 
+
 #define FramesPerBuffer  64
 
 
@@ -11,7 +12,8 @@ class NoiseGate : public Effect
 
 public:
 	float process(float) override;
-
+	std::string getParamName(int idx) override;
+	std::array<int, 3> getDefaultParams() override { return { 100, 80, 100 }; }
 private:
 	float calcRMS(float buffer[]);
 	void scalePotValues(int pot0, int pot1, int pot2);

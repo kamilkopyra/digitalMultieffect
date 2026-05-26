@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <array>
 
 class Effect
 {
@@ -10,6 +11,9 @@ public:
 	virtual float process(float sample) = 0;
 	virtual std::string getName() = 0;
 	void setPot(int* p) { pot = p; }
+
+	virtual std::string getParamName(int idx) = 0;
+	virtual std::array<int, 3> getDefaultParams() = 0;
 
 protected:
 	int* pot=nullptr;

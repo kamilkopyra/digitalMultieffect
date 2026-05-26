@@ -13,7 +13,8 @@ class Tremolo : public Effect
 public:
 	float process(float x) override;
 	std::string getName() override;
-
+	std::string getParamName(int idx) override;
+	std::array<int, 3> getDefaultParams() override { return { 100, 80, 0 }; }
 private:
 	float phase = 0.0f;
 	float lfoWave(float frequency, float depth);
