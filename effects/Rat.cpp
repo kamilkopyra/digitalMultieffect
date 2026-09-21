@@ -46,8 +46,8 @@ void Rat::scalePotValues(int pot0, int pot1, int pot2) {
     float volumeNorm = pot1 / 100.0f;
     float toneNorm = pot2 / 100.0f;
 
-    drive = 4.0f + driveNorm * 55.0f;
-    volume = volumeNorm * 0.15f;
+    drive = 4.0f + driveNorm * 70.0f;
+    volume = volumeNorm * 0.25f;
     tone = 0.09f + toneNorm * 0.20f;
 }
 

@@ -131,12 +131,15 @@
   <ItemGroup>
     <ClInclude Include="core\AudioEngine.h" />
     <ClInclude Include="core\Effect.h" />
+    <ClInclude Include="core\EffectChain.h" />
     <ClInclude Include="core\EventHandler.h" />
     <ClInclude Include="core\WavWriter.h" />
     <ClInclude Include="effects\AutoWah.h" />
+    <ClInclude Include="effects\Boost.h" />
     <ClInclude Include="effects\Compressor.h" />
     <ClInclude Include="effects\Delay.h" />
     <ClInclude Include="effects\Equalizer.h" />
+    <ClInclude Include="effects\Flanger.h" />
     <ClInclude Include="effects\Fuzz.h" />
     <ClInclude Include="effects\Harmonizer.h" />
     <ClInclude Include="effects\NoiseGate.h" />
@@ -145,16 +148,20 @@
     <ClInclude Include="effects\Tremolo.h" />
     <ClInclude Include="effects\TubeScreamer.h" />
     <ClInclude Include="effects\Tuner.h" />
+    <ClInclude Include="effects\Vibrato.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="core\AudioEngine.cpp" />
     <ClCompile Include="core\Effect.cpp" />
+    <ClCompile Include="core\EffectChain.cpp" />
     <ClCompile Include="core\EventHandler.cpp" />
     <ClCompile Include="core\WavWriter.cpp" />
     <ClCompile Include="effects\AutoWah.cpp" />
+    <ClCompile Include="effects\Boost.cpp" />
     <ClCompile Include="effects\Compressor.cpp" />
     <ClCompile Include="effects\Delay.cpp" />
     <ClCompile Include="effects\Equalizer.cpp" />
+    <ClCompile Include="effects\Flanger.cpp" />
     <ClCompile Include="effects\Fuzz.cpp" />
     <ClCompile Include="effects\Harmonizer.cpp" />
     <ClCompile Include="effects\NoiseGate.cpp" />
@@ -163,6 +170,7 @@
     <ClCompile Include="effects\Tremolo.cpp" />
     <ClCompile Include="effects\TubeScreamer.cpp" />
     <ClCompile Include="effects\Tuner.cpp" />
+    <ClCompile Include="effects\Vibrato.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

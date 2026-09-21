@@ -48,6 +48,9 @@
     <ClInclude Include="core\Effect.h">
       <Filter>Pliki nagłówkowe\core</Filter>
     </ClInclude>
+    <ClInclude Include="core\EffectChain.h">
+      <Filter>Pliki nagłówkowe\core</Filter>
+    </ClInclude>
     <ClInclude Include="effects\AutoWah.h">
       <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
@@ -64,6 +67,15 @@
       <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
     <ClInclude Include="effects\Phaser.h">
+      <Filter>Pliki nagłówkowe\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="effects\Flanger.h">
+      <Filter>Pliki nagłówkowe\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="effects\Vibrato.h">
+      <Filter>Pliki nagłówkowe\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="effects\Boost.h">
       <Filter>Pliki nagłówkowe\effects</Filter>
     </ClInclude>
     <ClInclude Include="effects\Fuzz.h">
@@ -98,6 +110,9 @@
     <ClCompile Include="core\Effect.cpp">
       <Filter>Pliki źródłowe\core</Filter>
     </ClCompile>
+    <ClCompile Include="core\EffectChain.cpp">
+      <Filter>Pliki źródłowe\core</Filter>
+    </ClCompile>
     <ClCompile Include="core\EventHandler.cpp">
       <Filter>Pliki źródłowe\core</Filter>
     </ClCompile>
@@ -130,6 +145,15 @@
     </ClCompile>
     <ClCompile Include="effects\Phaser.cpp">
       <Filter>Pliki źródłowe\effects\notTouchedYet</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\Flanger.cpp">
+      <Filter>Pliki źródłowe\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\Vibrato.cpp">
+      <Filter>Pliki źródłowe\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="effects\Boost.cpp">
+      <Filter>Pliki źródłowe\effects</Filter>
     </ClCompile>
     <ClCompile Include="effects\Compressor.cpp">
       <Filter>Pliki źródłowe\effects\work in progress</Filter>

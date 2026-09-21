@@ -13,18 +13,18 @@ int main() {
     EventHandler eventHandler(&engine);
 
 	// komunikacja po UART z Arduino
-    eventHandler.openSerial("COM3");
-    std::thread serialThread([&]() { eventHandler.runSerial(); });
-    serialThread.detach();
     std::cout << "Otwieram port...\n";
-    if (eventHandler.openSerial("COM3"))
+    if (eventHandler.openSerial("COM12"))
         std::cout << "Port otwarty\n";
     else
         std::cout << "Błąd otwierania portu\n";
+
+    std::thread serialThread([&]() { eventHandler.runSerial(); });
+    serialThread.detach();
     std::cout << "Po openSerial\n";
    
 
-    engine.setEffect(new Fuzz());
+    engine.getChain().toggle(new Fuzz());
     engine.init_single_effect(16);
 
     while (engine.isActive()) {

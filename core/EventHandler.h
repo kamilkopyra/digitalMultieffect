@@ -11,7 +11,6 @@ class EventHandler
 public:
 	EventHandler(AudioEngine* e) {
 		engine = e;
-		pot = e->pot;
 	}
 	void handleKey(char key);
 	void run();
@@ -22,7 +21,6 @@ public:
 	void onEncoderButton(int idx);
 
 private:
-	int* pot;
 	AudioEngine* engine;
 	boost::asio::io_context io;
 	boost::asio::serial_port port{ io };

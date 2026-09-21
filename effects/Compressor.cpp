@@ -16,7 +16,7 @@ float Compressor::process(float sample) {
     return compressed * makeupGain;
 }
 
-float Compressor::compressSample(float x) {
+float Compressor::compressSample(float x) {  
 
     // Envelope follower
     float level = fabsf(x);

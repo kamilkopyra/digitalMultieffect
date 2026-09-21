@@ -80,27 +80,6 @@ int AudioEngine::init_single_effect(int FramesPerBuffer)
     return 0;
 }
 
-void AudioEngine::setEffect(Effect* e) {
-    if (effect) {
-        effectParams[effect->getName()] = { pot[0], pot[1], pot[2] };
-    }
-
-    delete effect;
-    effect = e;
-
-    if (effect) {
-        if (effectParams.count(effect->getName())) {
-            auto& p = effectParams[effect->getName()];
-            pot[0] = p[0]; pot[1] = p[1]; pot[2] = p[2];
-        }
-        else {
-            auto defaults = effect->getDefaultParams();
-            pot[0] = defaults[0]; pot[1] = defaults[1]; pot[2] = defaults[2];
-        }
-        effect->setPot(pot);
-    }
-}
-
 int AudioEngine::audioCallback(const void* inputBuffer, void* outputBuffer,
     unsigned long framesPerBuffer,
     const PaStreamCallbackTimeInfo* timeInfo,
@@ -113,24 +92,21 @@ int AudioEngine::audioCallback(const void* inputBuffer, void* outputBuffer,
 
     static bool printed = false;
     if (!printed) {
-        if (engine->effect)
-            std::cout << "Program uruchomiony, efekt: " << engine->effect->getName() << "\n";
-        else
-            std::cout << "Program uruchomiony, brak efektu\n";
+        std::cout << "Program uruchomiony\n";
         printed = true;
     }
 
-  
+
 
     if (!in) return paContinue;
 
     for (unsigned i = 0; i < framesPerBuffer; ++i) {
-        float left = *in++;   
-        float right = *in++;  
+        float left = *in++;
+        float right = *in++;
 
-        float sample = right; 
+        float sample = right;
 
-        float modified = engine->effect ? engine->effect->process(sample) : sample;
+        float modified = engine->chain.process(sample);
 
 
         if (engine->wavWriter.isRecording())
@@ -151,9 +127,3 @@ void AudioEngine::stop() {
 bool AudioEngine::isActive() {
     return Pa_IsStreamActive(stream) == 1;
 }
-
-Effect* AudioEngine::getEffect() 
-{
-    return effect;
-}
-   

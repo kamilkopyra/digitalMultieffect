@@ -7,64 +7,62 @@
 #include "TubeScreamer.h"
 #include "Delay.h"
 #include "Compressor.h"
+#include "Vibrato.h"
+#include "Flanger.h"
+#include "Phaser.h"
+#include "AutoWah.h"
+#include "Equalizer.h"
+#include "Boost.h"
 #include "WavWriter.h"
 #include <filesystem>
+#include <algorithm>
+#include <ctime>
+
+// Dodaje / usuwa efekt z łańcucha i wypisuje aktualny stan toru.
+static void toggleAndReport(AudioEngine* engine, Effect* effect, char key) {
+	engine->getChain().toggle(effect);
+	std::cout << "Wcisnieto klawisz: " << key << "\n";
+	std::cout << "Lancuch: " << engine->getChain().describe() << "\n";
+}
 
 void EventHandler::handleKey(char key)
 {
 	switch (key) {
-	case '1': {
-		engine->setEffect(new Fuzz());
-		std::cout << "Wcisnieto klawisz: " << key << "\n";
-		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
-		break;
-	}
-	case '2': {
-		engine->setEffect(new Tremolo());
-		std::cout << "Wcisnieto klawisz: " << key << "\n";
-		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
-		break;
-	}
-	case '3': {
-		engine->setEffect(new Tuner());
-		std::cout << "Wcisnieto klawisz: " << key << "\n";
-		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
-		break;
-	}
-	case '4': {
-		engine->setEffect(new NoiseGate());
-		std::cout << "Wcisnieto klawisz: " << key << "\n";
-		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
-		break;
-	}
-	case '5': {
-		engine->setEffect(new Rat());
-		std::cout << "Wcisnieto klawisz: " << key << "\n";
-		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
-		break;
-	}
-	case '6': {
-		engine->setEffect(new TubeScreamer());
-		std::cout << "Wcisnieto klawisz: " << key << "\n";
-		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
-		break;
-	}
-	case '7': {
-		engine->setEffect(new Delay());
-		std::cout << "Wcisnieto klawisz: " << key << "\n";
-		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
-		break;
-	}
-	case '8': {
-		engine->setEffect(new Compressor());
-		std::cout << "Wcisnieto klawisz: " << key << "\n";
-		std::cout << "Wczytano efekt: " << engine->getEffect()->getName() << "\n";
+	case '1': toggleAndReport(engine, new Fuzz(), key); break;
+	case '2': toggleAndReport(engine, new Tremolo(), key); break;
+	case '3': toggleAndReport(engine, new Tuner(), key); break;
+	case '4': toggleAndReport(engine, new NoiseGate(), key); break;
+	case '5': toggleAndReport(engine, new Rat(), key); break;
+	case '6': toggleAndReport(engine, new TubeScreamer(), key); break;
+	case '7': toggleAndReport(engine, new Delay(), key); break;
+	case '8': toggleAndReport(engine, new Compressor(), key); break;
+	case 'z': toggleAndReport(engine, new Vibrato(), key); break;
+	case 'x': toggleAndReport(engine, new Flanger(), key); break;
+	case 'c': toggleAndReport(engine, new Phaser(), key); break;
+	case 'v': toggleAndReport(engine, new AutoWah(), key); break;
+	case 'b': toggleAndReport(engine, new Equalizer(), key); break;
+	case 'n': toggleAndReport(engine, new Boost(), key); break;
+
+	case '0': {
+		engine->getChain().clear();
+		std::cout << "Wyczyszczono lancuch efektow.\n";
 		break;
 	}
 
-	case '0': {
-		engine->setEffect(nullptr);
-		std::cout << "Wcisnieto klawisz: " << key << "\n";
+	// edycja parametrów edytowanego efektu bez enkoderów (np. do testów na samym PC)
+	case 'a': onEncoderTurn(0, -1); break;
+	case 's': onEncoderTurn(0, +1); break;
+	case 'd': onEncoderTurn(1, -1); break;
+	case 'f': onEncoderTurn(1, +1); break;
+	case 'g': onEncoderTurn(2, -1); break;
+	case 'h': onEncoderTurn(2, +1); break;
+	case 't': onEncoderButton(0); break;   // symulacja przycisku enkodera 0 (tap tempo)
+
+	case '\t': {
+		engine->getChain().focusNext();
+		Effect* f = engine->getChain().focused();
+		std::cout << "Edytowany efekt: " << (f ? f->getName() : "brak") << "\n";
+		std::cout << "Lancuch: " << engine->getChain().describe() << "\n";
 		break;
 	}
 
@@ -74,7 +72,7 @@ void EventHandler::handleKey(char key)
 			std::cout << "Nagrywanie zatrzymane.\n";
 		}
 		else {
-			std::string nazwa = engine->getEffect() ? engine->getEffect()->getName() : "brak_efektu";
+			std::string nazwa = engine->getChain().getName();
 			std::filesystem::create_directories("./recordings");
 			std::filesystem::path p = std::filesystem::absolute("./recordings/" + nazwa + ".wav");
 			std::cout << "Zapisuje do: " << p << "\n";
@@ -125,24 +123,6 @@ void EventHandler::asyncRead() {
 		});
 }
 
-//void EventHandler::onLineReceived(const boost::system::error_code& ec, std::size_t bytes) {
-//	if (ec) return;
-//
-//	std::istream stream(&serialBuffer);
-//	std::string line;
-//	std::getline(stream, line);
-//
-//	int a, b, c;
-//	if (sscanf_s(line.c_str(), "POT1: %d  POT2: %d  POT3: %d", &a, &b, &c) == 3) {
-//		pot[0] = a;
-//		pot[1] = b;
-//		pot[2] = c;
-//		//std::cout << "pot0=" << pot[0] << " pot1=" << pot[1] << " pot2=" << pot[2] << "\n";
-//	}
-//
-//	asyncRead();
-//}
-
 void EventHandler::onLineReceived(const boost::system::error_code& ec, std::size_t bytes) {
 	if (ec) return;
 
@@ -150,7 +130,6 @@ void EventHandler::onLineReceived(const boost::system::error_code& ec, std::size
 	std::string line;
 	std::getline(stream, line);
 
-	char type;
 	int idx, dir;
 
 	if (sscanf_s(line.c_str(), "E %d %d", &idx, &dir) == 2) {
@@ -165,23 +144,30 @@ void EventHandler::onLineReceived(const boost::system::error_code& ec, std::size
 
 
 void EventHandler::runSerial() {
-	io.run(); 
+	io.run();
 }
 
 void EventHandler::onEncoderTurn(int idx, int dir) {
-	engine->pot[idx] = std::clamp(engine->pot[idx] + dir * 2, 0, 100);
-	if (engine->getEffect())
-		std::cout << engine->getEffect()->getName() << " - "
-		<< engine->getEffect()->getParamName(idx) << ": "
-		<< engine->pot[idx] << "\n";
+	if (idx < 0 || idx > 2) return;
+
+	EffectChain& chain = engine->getChain();
+	chain.adjustFocusedParam(idx, dir * 2);
+
+	Effect* f = chain.focused();
+	if (f)
+		std::cout << f->getName() << " - "
+		<< f->getParamName(idx) << ": "
+		<< f->getParam(idx) << "\n";
+	else
+		std::cout << "Lancuch pusty - brak parametrow do edycji\n";
 }
 
 
-
-
-
 void EventHandler::onEncoderButton(int idx) {
-	if (idx == 0 && engine->getEffect() && engine->getEffect()->isModulation()) {
+	EffectChain& chain = engine->getChain();
+
+	if (idx == 0 && chain.isModulation()) {
+		// tap tempo dla wybranego efektu modulacyjnego
 		static clock_t taps[4] = { 0, 0, 0, 0 };
 		static int tapCount = 0;
 
@@ -194,13 +180,14 @@ void EventHandler::onEncoderButton(int idx) {
 				/ (count - 1) / CLOCKS_PER_SEC * 1000.0f;
 			float bpm = 60000.0f / avgMs;
 
-			engine->getEffect()->TapToParam(avgMs);
+			chain.TapToParam(avgMs);
 			std::cout << "Tap tempo: " << bpm << " BPM\n";
 		}
 	}
 	else {
-		std::cout << "Przycisk enkodera " << idx << "\n";
+		// pozostałe przyciski enkoderów przełączają edytowany efekt
+		chain.focusNext();
+		Effect* f = chain.focused();
+		std::cout << "Edytowany efekt: " << (f ? f->getName() : "brak") << "\n";
 	}
 }
-
-

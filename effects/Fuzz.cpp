@@ -22,7 +22,7 @@ std:: string Fuzz::getName() {
 
 void Fuzz::scalePotValues(int pot0, int pot1, int pot2) {
     gain = (pot0 / 100.0f) * 10.0f; 
-    volume = (pot1 / 100.0f); 
+    volume = (pot1 / 100.0f)*2; 
     clipRange = 0.32f - (0.01f + (pot2 / 100.0f) * 0.3f);
 }
 

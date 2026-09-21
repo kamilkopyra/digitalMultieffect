@@ -3,9 +3,8 @@
 #include <portaudio.h>
 
 #include "Effect.h"
+#include "EffectChain.h"
 #include "WavWriter.h"
-#include <map>
-#include <array>
 #include <string>
 
 class AudioEngine
@@ -16,25 +15,21 @@ class AudioEngine
 
         #define sampleRate       48000
 		PaStream* stream = nullptr;   // Wskaźnik na otwarty strumień audio
-        Effect* effect = nullptr;
+        EffectChain chain;            // cały tor sygnału to łańcuch efektów
 
         static int audioCallback(const void* inputBuffer, void* outputBuffer,
             unsigned long framesPerBuffer,
             const PaStreamCallbackTimeInfo* timeInfo,
             PaStreamCallbackFlags statusFlags,
             void* userData);
-            
-
-        std::map<std::string, std::array<int, 3>> effectParams;
 
     public:
             WavWriter wavWriter;
 		    int init_single_effect(int buffer);
-            void setEffect(Effect* e);
             void stop();
 			bool isActive();
-            int pot[3] = { 0, 0, 0 };
-            Effect* getEffect();
+
+            EffectChain& getChain() { return chain; }
+            Effect* getEffect() { return &chain; }   // zgodność wstecz (nagrywanie, tap tempo)
 
 };
-
