@@ -13,7 +13,6 @@ class AudioEngine
 
     private:
 
-        #define sampleRate       48000
 		PaStream* stream = nullptr;   // Wskaźnik na otwarty strumień audio
         EffectChain chain;            // cały tor sygnału to łańcuch efektów
 

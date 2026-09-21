@@ -2,12 +2,16 @@
 #include <string>
 #include <array>
 
+// Stała częstotliwość próbkowania całego projektu. `inline constexpr` (C++17)
+// daje jeden, prawdziwie typowany egzemplarz widoczny we wszystkich plikach
+// dołączających ten nagłówek — bez ryzyka niezgodnych #define w różnych
+// miejscach (tak jak było wcześniej: Effect.h i AudioEngine.h definiowały
+// identyczne makro osobno).
+inline constexpr int sampleRate = 48000;
+
 class Effect
 {
 public:
-#define sampleRate       48000
-
-
 	virtual ~Effect() {}
 
 	virtual bool isModulation() { return false; }  //domyślnie fałsz
