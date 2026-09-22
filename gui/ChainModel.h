@@ -46,6 +46,8 @@ public slots:
     void setSlotParam(int index, int paramIdx, int value);
     void addSlot();
     void removeSlot();
+    // czyści wszystkie sloty i ścina ich liczbę z powrotem do domyślnych (minSlots)
+    void resetChain();
     void toggleRecording();
 
     // {} (pusta mapa) jeśli w tym slocie nie ma Tunera albo nic jeszcze
@@ -56,6 +58,12 @@ public slots:
     // statystyki obciążenia CPU — jak wyżej, odpytywane Timerem (dane
     // zmieniają się z wątku audio, nie z akcji użytkownika)
     QVariantMap cpuStats();
+
+    // --- presety (zapisują/wczytują cały łańcuch: efekty + parametry) ---
+    QStringList listPresets();
+    bool savePreset(const QString& name);
+    bool loadPreset(const QString& name);
+    bool deletePreset(const QString& name);
 
 signals:
     void chainChanged();

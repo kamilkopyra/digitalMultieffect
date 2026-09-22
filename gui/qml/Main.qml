@@ -1,16 +1,102 @@
 import QtQuick
-import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
 
-Window {
+ApplicationWindow {
     id: root
     width: 960
-    height: 420
+    height: 440
     visible: true
-    title: qsTr("Multieffect")
-    color: "#1e1e1e"
+    title: tr("title")
 
+    // ==================== motyw (light/dark) ====================
+    property bool darkMode: true
+
+    readonly property color bgColor: darkMode ? "#1e1e1e" : "#f0f0f0"
+    readonly property color panelColor: darkMode ? "#2a2a2a" : "#ffffff"
+    readonly property color borderColor: darkMode ? "#444444" : "#cccccc"
+    readonly property color textColor: darkMode ? "#ffffff" : "#202020"
+    readonly property color mutedTextColor: darkMode ? "#aaaaaa" : "#606060"
+    readonly property color dimTextColor: darkMode ? "#666666" : "#909090"
+    readonly property color trackColor: darkMode ? "#151515" : "#e0e0e0"
+    readonly property color trackBorderColor: darkMode ? "#3a3a3a" : "#c0c0c0"
+
+    color: bgColor
+
+    // ==================== język (prosty słownik EN/PL) ====================
+    property string language: "en"
+
+    readonly property var strings: ({
+        en: {
+            title: "Multieffect",
+            effects: "Effects",
+            cpu: "CPU",
+            addSlot: "+ slot",
+            removeSlot: "- slot",
+            clear: "Clear",
+            menuPresets: "Presets",
+            menuSave: "Save...",
+            menuLoad: "Load",
+            menuDelete: "Delete",
+            menuLanguage: "Language",
+            menuTheme: "Theme",
+            light: "Light",
+            dark: "Dark",
+            slot: "Slot",
+            emptySlot: "Empty slot — pick an effect above",
+            record: "Record",
+            stopRecording: "Stop recording",
+            noSignal: "No signal... play a note",
+            inTune: "*** IN TUNE! ***",
+            tooHigh: "too high - loosen the string",
+            tooLow: "too low - tighten the string",
+            stringLabel: "String",
+            savePresetTitle: "Save preset",
+            presetName: "preset name",
+            noPresets: "(no presets)",
+            save: "Save",
+            cancel: "Cancel",
+            none: "-"
+        },
+        pl: {
+            title: "Multieffect",
+            effects: "Efekty",
+            cpu: "CPU",
+            addSlot: "+ slot",
+            removeSlot: "- slot",
+            clear: "Wyczysc",
+            menuPresets: "Presety",
+            menuSave: "Zapisz...",
+            menuLoad: "Wczytaj",
+            menuDelete: "Usun",
+            menuLanguage: "Jezyk",
+            menuTheme: "Motyw",
+            light: "Jasny",
+            dark: "Ciemny",
+            slot: "Slot",
+            emptySlot: "Pusty slot — wybierz efekt powyzej",
+            record: "Nagrywaj",
+            stopRecording: "Zatrzymaj nagrywanie",
+            noSignal: "Brak sygnalu... zagraj na strunie",
+            inTune: "*** NASTROJONO! ***",
+            tooHigh: "za wysoko - poluzuj strune",
+            tooLow: "za nisko - naciagnij strune",
+            stringLabel: "Struna",
+            savePresetTitle: "Zapisz preset",
+            presetName: "nazwa presetu",
+            noPresets: "(brak presetow)",
+            save: "Zapisz",
+            cancel: "Anuluj",
+            none: "-"
+        }
+    })
+
+    function tr(key) {
+        var dict = strings[language]
+        return (dict && dict[key] !== undefined) ? dict[key] : key
+    }
+
+    // ==================== statystyki CPU (odpytywane Timerem) ====================
     property var cpu: ({ totalPercent: 0, perSlotMicros: [] })
 
     Timer {
@@ -25,6 +111,128 @@ Window {
                ? root.cpu.perSlotMicros[i] : 0
     }
 
+    // ==================== presety (lista odświeżana ręcznie po zapisie) ====================
+    property var presetNames: chainModel.listPresets()
+
+    // ==================== menu ====================
+    menuBar: MenuBar {
+        Menu {
+            title: root.tr("menuPresets")
+
+            MenuItem {
+                text: root.tr("menuSave")
+                onTriggered: saveDialog.open()
+            }
+
+            Menu {
+                id: presetLoadMenu
+                title: root.tr("menuLoad")
+                enabled: root.presetNames.length > 0
+
+                Instantiator {
+                    model: root.presetNames
+                    delegate: MenuItem {
+                        text: modelData
+                        onTriggered: chainModel.loadPreset(modelData)
+                    }
+                    onObjectAdded: (index, object) => presetLoadMenu.insertItem(index, object)
+                    onObjectRemoved: (index, object) => presetLoadMenu.removeItem(object)
+                }
+            }
+
+            Menu {
+                id: presetDeleteMenu
+                title: root.tr("menuDelete")
+                enabled: root.presetNames.length > 0
+
+                Instantiator {
+                    model: root.presetNames
+                    delegate: MenuItem {
+                        text: modelData
+                        onTriggered: {
+                            chainModel.deletePreset(modelData)
+                            root.presetNames = chainModel.listPresets()
+                        }
+                    }
+                    onObjectAdded: (index, object) => presetDeleteMenu.insertItem(index, object)
+                    onObjectRemoved: (index, object) => presetDeleteMenu.removeItem(object)
+                }
+            }
+        }
+
+        Menu {
+            title: root.tr("menuLanguage")
+            MenuItem {
+                text: "English"
+                checkable: true
+                checked: root.language === "en"
+                onTriggered: root.language = "en"
+            }
+            MenuItem {
+                text: "Polski"
+                checkable: true
+                checked: root.language === "pl"
+                onTriggered: root.language = "pl"
+            }
+        }
+
+        Menu {
+            title: root.tr("menuTheme")
+            MenuItem {
+                text: root.tr("light")
+                checkable: true
+                checked: !root.darkMode
+                onTriggered: root.darkMode = false
+            }
+            MenuItem {
+                text: root.tr("dark")
+                checkable: true
+                checked: root.darkMode
+                onTriggered: root.darkMode = true
+            }
+        }
+    }
+
+    // ==================== dialog zapisu presetu ====================
+    Dialog {
+        id: saveDialog
+        title: root.tr("savePresetTitle")
+        modal: true
+        anchors.centerIn: parent
+        width: Math.max(320, implicitWidth)
+
+        // własne przyciski — standardButtons (Dialog.Save/Cancel) biorą etykiety
+        // z lokalizacji systemowej Qt, nie z naszego słownika, więc np. przy
+        // ustawionym English i polskim Windowsie i tak pokazywały "Zachowaj"/"Anuluj"
+        footer: DialogButtonBox {
+            Button {
+                text: root.tr("save")
+                DialogButtonBox.buttonRole: DialogButtonBox.AcceptRole
+            }
+            Button {
+                text: root.tr("cancel")
+                DialogButtonBox.buttonRole: DialogButtonBox.RejectRole
+            }
+        }
+
+        TextField {
+            id: saveNameField
+            width: 280
+            placeholderText: root.tr("presetName")
+        }
+
+        onAccepted: {
+            var name = saveNameField.text.trim()
+            if (name.length > 0) {
+                chainModel.savePreset(name)
+                root.presetNames = chainModel.listPresets()
+                saveNameField.text = ""
+            }
+        }
+        onOpened: saveNameField.forceActiveFocus()
+    }
+
+    // ==================== główny layout ====================
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 10
@@ -35,24 +243,28 @@ Window {
             spacing: 8
 
             Label {
-                text: "Efekty: " + chainModel.slotCount + " / " + chainModel.maxSlots
-                color: "#aaaaaa"
+                text: root.tr("effects") + ": " + chainModel.slotCount + " / " + chainModel.maxSlots
+                color: root.mutedTextColor
             }
             Label {
-                text: "CPU: " + root.cpu.totalPercent.toFixed(2) + " %"
+                text: root.tr("cpu") + ": " + root.cpu.totalPercent.toFixed(2) + " %"
                 color: root.cpu.totalPercent > 50 ? "#e0a030" : "#4caf50"
                 font.bold: true
             }
             Item { Layout.fillWidth: true }
             Button {
-                text: "+ slot"
+                text: root.tr("addSlot")
                 enabled: chainModel.slotCount < chainModel.maxSlots
                 onClicked: chainModel.addSlot()
             }
             Button {
-                text: "- slot"
+                text: root.tr("removeSlot")
                 enabled: chainModel.slotCount > chainModel.minSlots
                 onClicked: chainModel.removeSlot()
+            }
+            Button {
+                text: root.tr("clear")
+                onClicked: chainModel.resetChain()
             }
         }
 
@@ -68,9 +280,9 @@ Window {
                 id: slotPanel
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                color: "#2a2a2a"
+                color: root.panelColor
                 radius: 6
-                border.color: "#444444"
+                border.color: root.borderColor
 
                 property int slotIndex: index
                 property var slotData: (chainModel.chainSlots.length > slotIndex)
@@ -87,29 +299,29 @@ Window {
                         spacing: 8
 
                         Label {
-                            text: "Slot " + (slotPanel.slotIndex + 1)
-                            color: "#aaaaaa"
+                            text: root.tr("slot") + " " + (slotPanel.slotIndex + 1)
+                            color: root.mutedTextColor
                             font.pixelSize: 12
                         }
 
                         Label {
                             visible: !slotPanel.slotData.empty
                             text: root.slotCpuMicros(slotPanel.slotIndex).toFixed(1) + " us"
-                            color: "#666666"
+                            color: root.dimTextColor
                             font.pixelSize: 11
                         }
 
                         ComboBox {
                             id: combo
                             Layout.fillWidth: true
-                            model: ["-"].concat(chainModel.availableEffects)
+                            model: [root.tr("none")].concat(chainModel.availableEffects)
                             currentIndex: {
                                 var i = model.indexOf(slotPanel.slotData.name)
                                 return i >= 0 ? i : 0
                             }
                             onActivated: function(idx) {
                                 var name = model[idx]
-                                chainModel.setSlotEffect(slotPanel.slotIndex, name === "-" ? "" : name)
+                                chainModel.setSlotEffect(slotPanel.slotIndex, name === root.tr("none") ? "" : name)
                             }
                         }
                     }
@@ -130,7 +342,7 @@ Window {
 
                                 Label {
                                     text: modelData.name
-                                    color: "white"
+                                    color: root.textColor
                                     Layout.preferredWidth: 90
                                 }
 
@@ -145,7 +357,7 @@ Window {
 
                                 Label {
                                     text: modelData.value
-                                    color: "#aaaaaa"
+                                    color: root.mutedTextColor
                                     Layout.preferredWidth: 30
                                 }
                             }
@@ -177,10 +389,10 @@ Window {
 
                             Label {
                                 text: tunerPanel.haveReading
-                                      ? ("Struna: " + tunerPanel.reading.stringName
+                                      ? (root.tr("stringLabel") + ": " + tunerPanel.reading.stringName
                                          + "   " + tunerPanel.reading.freq.toFixed(1) + " Hz")
-                                      : "Brak sygnalu... zagraj na strunie"
-                                color: "white"
+                                      : root.tr("noSignal")
+                                color: root.textColor
                                 font.pixelSize: 15
                             }
 
@@ -189,15 +401,15 @@ Window {
                                 Layout.fillWidth: true
                                 height: 26
                                 radius: 4
-                                color: "#151515"
-                                border.color: "#3a3a3a"
+                                color: root.trackColor
+                                border.color: root.trackBorderColor
 
                                 Rectangle {
                                     // znacznik "0 centow" na środku (cel strojenia)
                                     width: 2
                                     height: parent.height
                                     anchors.horizontalCenter: parent.horizontalCenter
-                                    color: "#666666"
+                                    color: root.dimTextColor
                                 }
 
                                 Rectangle {
@@ -218,16 +430,15 @@ Window {
                             }
 
                             Label {
-                                text: "-50                    0                    +50 (centow)"
-                                color: "#777777"
+                                text: "-50                    0                    +50"
+                                color: root.dimTextColor
                                 font.pixelSize: 10
                             }
 
                             Label {
                                 text: !tunerPanel.haveReading ? ""
-                                      : (tunerPanel.reading.inTune ? "*** NASTROJONO! ***"
-                                         : (tunerPanel.reading.cents > 0 ? "za wysoko - poluzuj strune"
-                                                                          : "za nisko - naciagnij strune"))
+                                      : (tunerPanel.reading.inTune ? root.tr("inTune")
+                                         : (tunerPanel.reading.cents > 0 ? root.tr("tooHigh") : root.tr("tooLow")))
                                 color: tunerPanel.haveReading && tunerPanel.reading.inTune ? "#4caf50" : "#e0a030"
                                 font.bold: true
                                 font.pixelSize: 14
@@ -240,8 +451,8 @@ Window {
                     // --- pusty slot ---
                     Label {
                         visible: slotPanel.slotData.empty
-                        text: "Pusty slot — wybierz efekt z listy powyzej"
-                        color: "#666666"
+                        text: root.tr("emptySlot")
+                        color: root.dimTextColor
                         font.italic: true
                     }
                 }
@@ -252,7 +463,7 @@ Window {
 
         Button {
             Layout.fillWidth: true
-            text: chainModel.recording ? "Zatrzymaj nagrywanie" : "Nagrywaj"
+            text: chainModel.recording ? root.tr("stopRecording") : root.tr("record")
             highlighted: chainModel.recording
             onClicked: chainModel.toggleRecording()
         }

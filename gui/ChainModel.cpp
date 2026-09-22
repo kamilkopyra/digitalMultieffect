@@ -16,6 +16,10 @@
 #include "Boost.h"
 
 #include <QDebug>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 #include <filesystem>
 
 ChainModel::ChainModel(QObject* parent) : QObject(parent) {}
@@ -74,6 +78,15 @@ void ChainModel::addSlot() {
 
 void ChainModel::removeSlot() {
     engine.getChain().removeSlot();
+    emit chainChanged();
+}
+
+void ChainModel::resetChain() {
+    EffectChain& chain = engine.getChain();
+    chain.clear();   // opróżnia wszystkie aktywne sloty (removeSlot i tak by to zrobił, ale jawnie)
+    while (chain.slotCount() > EffectChain::minSlots)
+        chain.removeSlot();
+    qInfo() << "Lancuch wyczyszczony.";
     emit chainChanged();
 }
 
@@ -148,6 +161,95 @@ QVariantMap ChainModel::cpuStats() {
     result["perSlotMicros"] = perSlot;
 
     return result;
+}
+
+QStringList ChainModel::listPresets() {
+    QStringList result;
+    std::filesystem::create_directories("./presets");
+    for (const auto& entry : std::filesystem::directory_iterator("./presets")) {
+        if (entry.path().extension() == ".json")
+            result.append(QString::fromStdString(entry.path().stem().string()));
+    }
+    return result;
+}
+
+bool ChainModel::savePreset(const QString& name) {
+    if (name.trimmed().isEmpty()) return false;
+
+    QJsonArray slotsArr;
+    for (const auto& info : engine.getChain().listEffects()) {
+        QJsonObject o;
+        o["name"] = QString::fromStdString(info.name);
+        QJsonArray params;
+        for (int p = 0; p < 3; ++p) params.append(info.params[p]);
+        o["params"] = params;
+        slotsArr.append(o);
+    }
+    QJsonObject root;
+    root["slots"] = slotsArr;
+
+    std::filesystem::create_directories("./presets");
+    QFile f("./presets/" + name + ".json");
+    if (!f.open(QIODevice::WriteOnly)) {
+        qWarning() << "Nie udalo sie zapisac presetu:" << f.fileName();
+        return false;
+    }
+    f.write(QJsonDocument(root).toJson());
+    f.close();
+    qInfo() << "Zapisano preset:" << f.fileName();
+    return true;
+}
+
+bool ChainModel::loadPreset(const QString& name) {
+    QFile f("./presets/" + name + ".json");
+    if (!f.open(QIODevice::ReadOnly)) {
+        qWarning() << "Nie udalo sie wczytac presetu:" << f.fileName();
+        return false;
+    }
+    QJsonDocument doc = QJsonDocument::fromJson(f.readAll());
+    f.close();
+    if (!doc.isObject()) return false;
+
+    QJsonArray slotsArr = doc.object()["slots"].toArray();
+    EffectChain& chain = engine.getChain();
+    chain.clear();
+
+    // dopasuj liczbę slotów do zapisanej w presecie (w granicach min/max)
+    int wanted = slotsArr.size();
+    while (chain.slotCount() < wanted && chain.slotCount() < EffectChain::maxSlots) chain.addSlot();
+    while (chain.slotCount() > wanted && chain.slotCount() > EffectChain::minSlots) chain.removeSlot();
+
+    for (int i = 0; i < slotsArr.size() && i < chain.slotCount(); ++i) {
+        QJsonObject o = slotsArr[i].toObject();
+        QString effectName = o["name"].toString();
+        if (effectName.isEmpty()) continue;   // pusty slot w presecie
+
+        Effect* e = createEffect(effectName);
+        if (!e) continue;
+        chain.setSlot(i, e);
+
+        QJsonArray params = o["params"].toArray();
+        for (int p = 0; p < 3 && p < params.size(); ++p)
+            chain.setSlotParam(i, p, params[p].toInt());
+    }
+
+    emit chainChanged();
+    qInfo() << "Wczytano preset:" << f.fileName();
+    return true;
+}
+
+bool ChainModel::deletePreset(const QString& name) {
+    QFile f("./presets/" + name + ".json");
+    if (!f.exists()) {
+        qWarning() << "Preset nie istnieje:" << f.fileName();
+        return false;
+    }
+    bool ok = f.remove();
+    if (ok)
+        qInfo() << "Usunieto preset:" << f.fileName();
+    else
+        qWarning() << "Nie udalo sie usunac presetu:" << f.fileName();
+    return ok;
 }
 
 QVariantMap ChainModel::tunerReading(int index) {

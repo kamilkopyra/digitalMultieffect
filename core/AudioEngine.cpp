@@ -4,7 +4,7 @@
 
 int AudioEngine::init_single_effect(int FramesPerBuffer)
 {
-   
+
     PaError err = Pa_Initialize();
     if (err != paNoError) {
         std::cerr << "Init error: " << Pa_GetErrorText(err) << std::endl;
@@ -110,7 +110,7 @@ int AudioEngine::audioCallback(const void* inputBuffer, void* outputBuffer,
 
 
         if (engine->wavWriter.isRecording())
-            engine->wavWriter.writeSample(modified);  
+            engine->wavWriter.writeSample(modified);
 
         *out++ = modified;
         *out++ = modified;
