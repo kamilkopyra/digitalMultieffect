@@ -24,7 +24,7 @@ int main() {
     std::cout << "Po openSerial\n";
    
 
-    engine.getChain().toggle(new Fuzz());
+    engine.getChain().setSlot(0, new Fuzz());
     engine.init_single_effect(16);
 
     while (engine.isActive()) {

@@ -23,3 +23,13 @@ Release/
 *.obj
 *.ilk
 *.idb
+
+# CMake / Qt Creator (gui/)
+build/
+*/build/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+*.user
+.qtcreator/

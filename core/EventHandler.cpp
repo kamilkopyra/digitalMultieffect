@@ -18,11 +18,13 @@
 #include <algorithm>
 #include <ctime>
 
-// Dodaje / usuwa efekt z łańcucha i wypisuje aktualny stan toru.
+// Wrzuca / usuwa efekt w aktualnie wybranym (edytowanym) slocie i wypisuje
+// stan toru. Ten sam klawisz drugi raz usuwa efekt (patrz toggleInSlot).
 static void toggleAndReport(AudioEngine* engine, Effect* effect, char key) {
-	engine->getChain().toggle(effect);
+	EffectChain& chain = engine->getChain();
+	chain.toggleInSlot(chain.focusedIndex(), effect);
 	std::cout << "Wcisnieto klawisz: " << key << "\n";
-	std::cout << "Lancuch: " << engine->getChain().describe() << "\n";
+	std::cout << "Lancuch: " << chain.describe() << "\n";
 }
 
 void EventHandler::handleKey(char key)
@@ -46,6 +48,19 @@ void EventHandler::handleKey(char key)
 	case '0': {
 		engine->getChain().clear();
 		std::cout << "Wyczyszczono lancuch efektow.\n";
+		break;
+	}
+
+	case '=': {
+		bool ok = engine->getChain().addSlot();
+		std::cout << (ok ? "Dodano slot. " : "Juz maksimum (6). ")
+			<< "Lancuch: " << engine->getChain().describe() << "\n";
+		break;
+	}
+	case '-': {
+		bool ok = engine->getChain().removeSlot();
+		std::cout << (ok ? "Usunieto ostatni slot. " : "Juz minimum (3). ")
+			<< "Lancuch: " << engine->getChain().describe() << "\n";
 		break;
 	}
 
