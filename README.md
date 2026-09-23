@@ -2,10 +2,9 @@
 
 A real-time guitar multi-effect processor with a Qt Quick GUI.
 
-## Screenshots
+## App view
 
-![Main window](docs/screenshots/main.png)
-![Tuner](docs/screenshots/tuner.png)
+![Main window](gui/assets/screenshots/im5.png)
 
 ## Features
 
@@ -38,7 +37,24 @@ A real-time guitar multi-effect processor with a Qt Quick GUI.
 | Equalizer | static filter (3-band, biquad) |
 | Tuner | pitch detection (McLeod method) |
 
+## Effects art
+
+<table>
+  <tr>
+    <td><img src="gui/assets/screenshots/im1.png"/></td>
+    <td><img src="gui/assets/screenshots/im2.png"/></td>
+  </tr>
+  <tr>
+    <td><img src="gui/assets/screenshots/im3.png"/></td>
+    <td><img src="gui/assets/screenshots/im4.png"/></td>
+  </tr>
+</table>
+
 ## Building
+
+a .exe file has been attached to this repository
+
+If you want to build the project yourself :
 
 The GUI lives in `gui/` and builds with CMake + Qt6.
 
