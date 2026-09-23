@@ -52,6 +52,10 @@ A real-time guitar multi-effect processor with a Qt Quick GUI.
 
 ## Building
 
+a .exe file has been attached to this repository
+
+If you want to build the project yourself :
+
 The GUI lives in `gui/` and builds with CMake + Qt6.
 
 Requirements:
