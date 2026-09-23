@@ -36,3 +36,5 @@ CTestTestfile.cmake
 
 # VS Code
 .vscode/
+
+dist/

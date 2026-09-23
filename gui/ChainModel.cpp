@@ -21,10 +21,19 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QCoreApplication>
+#include <QStandardPaths>
+#include <QDir>
 #include <QUrl>
 #include <filesystem>
 
 ChainModel::ChainModel(QObject* parent) : QObject(parent) {}
+
+QString ChainModel::dataDir(const QString& sub) const {
+    QString base = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QString path = base + "/" + sub;
+    QDir().mkpath(path);
+    return path;
+}
 
 ChainModel::~ChainModel() {
     engine.stop();
@@ -115,8 +124,7 @@ void ChainModel::toggleRecording() {
     }
     else {
         std::string nazwa = engine.getChain().getName();
-        std::filesystem::create_directories("./recordings");
-        std::string path = "./recordings/" + nazwa + ".wav";
+        std::string path = (dataDir("recordings") + "/" + QString::fromStdString(nazwa) + ".wav").toStdString();
         bool ok = engine.wavWriter.start(path);
         if (ok) {
             std::string abs = std::filesystem::absolute(path).string();
@@ -178,8 +186,8 @@ QVariantList ChainModel::waveform() {
 
 QStringList ChainModel::listPresets() {
     QStringList result;
-    std::filesystem::create_directories("./presets");
-    for (const auto& entry : std::filesystem::directory_iterator("./presets")) {
+    QString dir = dataDir("presets");
+    for (const auto& entry : std::filesystem::directory_iterator(dir.toStdString())) {
         if (entry.path().extension() == ".json")
             result.append(QString::fromStdString(entry.path().stem().string()));
     }
@@ -201,8 +209,7 @@ bool ChainModel::savePreset(const QString& name) {
     QJsonObject root;
     root["slots"] = slotsArr;
 
-    std::filesystem::create_directories("./presets");
-    QFile f("./presets/" + name + ".json");
+    QFile f(dataDir("presets") + "/" + name + ".json");
     if (!f.open(QIODevice::WriteOnly)) {
         qWarning() << "Nie udalo sie zapisac presetu:" << f.fileName();
         return false;
@@ -214,7 +221,7 @@ bool ChainModel::savePreset(const QString& name) {
 }
 
 bool ChainModel::loadPreset(const QString& name) {
-    QFile f("./presets/" + name + ".json");
+    QFile f(dataDir("presets") + "/" + name + ".json");
     if (!f.open(QIODevice::ReadOnly)) {
         qWarning() << "Nie udalo sie wczytac presetu:" << f.fileName();
         return false;
@@ -291,7 +298,7 @@ int ChainModel::currentOutputDevice() {
 }
 
 bool ChainModel::deletePreset(const QString& name) {
-    QFile f("./presets/" + name + ".json");
+    QFile f(dataDir("presets") + "/" + name + ".json");
     if (!f.exists()) {
         qWarning() << "Preset nie istnieje:" << f.fileName();
         return false;

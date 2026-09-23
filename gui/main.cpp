@@ -18,6 +18,7 @@ int main(int argc, char* argv[])
     QQuickStyle::setStyle("Fusion");
 
     QGuiApplication app(argc, argv);
+    app.setApplicationName("Digital MultiEffect");   // nazwa folderu w %APPDATA% (presety, nagrania)
 
     // ikona okna (górny lewy róg) — plik obok .exe, kopiowany tam przez CMake
     // (ten sam mechanizm co assets/effects). Podmień gui/assets/icon.png na

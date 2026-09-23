@@ -15,13 +15,33 @@ find_package(portaudio CONFIG REQUIRED)
 
 qt_standard_project_setup()
 
+# Bez tych polityk moduł QML kompiluje się poprawnie, ale przy uruchomieniu
+# POZA Qt Creatorem daje "Module "MultieffectGui" contains no type named
+# "Main"" — zasoby modułu i sam typ rejestrują się pod niespójną ścieżką
+# zasobów. NEW = zachowanie zalecane przez Qt6 dla qt_add_qml_module.
+if(QT_KNOWN_POLICY_QTP0001)
+    qt_policy(SET QTP0001 NEW)
+endif()
+if(QT_KNOWN_POLICY_QTP0004)
+    qt_policy(SET QTP0004 NEW)
+endif()
+
 set(CORE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../core)
 set(EFFECTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../effects)
+
+# Ikona wbudowana w sam .exe (zasób Windows) — bez tego .exe nie ma żadnej
+# ikony we własnych zasobach, więc Eksplorator/skróty (Pulpit, Menu Start)
+# pokazują domyślną ikonę systemową zamiast icon.ico
+if(WIN32)
+    enable_language(RC)
+    set(APP_ICON_RESOURCE ${CMAKE_CURRENT_SOURCE_DIR}/app_icon.rc)
+endif()
 
 qt_add_executable(MultieffectGui
     main.cpp
     ChainModel.h
     ChainModel.cpp
+    ${APP_ICON_RESOURCE}
     ${CORE_DIR}/Effect.h
     ${CORE_DIR}/Effect.cpp
     ${CORE_DIR}/EffectChain.h

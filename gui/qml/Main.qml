@@ -50,7 +50,7 @@ ApplicationWindow {
 
     readonly property var strings: ({
         en: {
-            title: "Multieffect",
+            title: "Digital MultiEffect",
             effects: "Effects",
             cpu: "CPU",
             addSlot: "+ slot",
@@ -87,7 +87,7 @@ ApplicationWindow {
             none: "-"
         },
         pl: {
-            title: "Multieffect",
+            title: "Digital MultiEffect",
             effects: "Efekty",
             cpu: "CPU",
             addSlot: "+ slot",

@@ -93,4 +93,10 @@ signals:
 private:
     AudioEngine engine;
     Effect* createEffect(const QString& name) const;
+
+    // %APPDATA%/<app>/<sub> (tworzy folder, jeśli nie istnieje) — NIE folder
+    // obok .exe: na Windows 11 "Controlled folder access" potrafi po cichu
+    // blokować zapis nowych plików w chronionych lokalizacjach (m.in. Desktop),
+    // a folder instalacyjny (np. Program Files) w ogóle nie musi być zapisywalny
+    QString dataDir(const QString& sub) const;
 };
