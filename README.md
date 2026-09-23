@@ -2,6 +2,11 @@
 
 A real-time guitar multi-effect processor with a Qt Quick GUI.
 
+## Screenshots
+
+![Main window](docs/screenshots/main.png)
+![Tuner](docs/screenshots/tuner.png)
+
 ## Features
 
 - Chain of up to 6 effect slots, each with its own effect and 3 parameters
