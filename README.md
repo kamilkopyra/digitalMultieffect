@@ -49,6 +49,16 @@ Arduino over serial.
 The same actions are available from Arduino rotary encoders sending
 `E <index> <dir>` (turn) and `B <index>` (button press) lines over serial.
 
+## Arduino
+
+`arduino/Encoders/Encoders.ino` reads 3 rotary encoders (with push-button)
+and forwards turns/presses to the PC over serial at 9600 baud, in the
+`E <index> <dir>` / `B <index>` format the app expects. Needs the
+[Encoder](https://www.pjrc.com/teensy/td_libs_Encoder.html) library.
+
+Wiring: encoder 1 on pins 2/3 (button on 4), encoder 2 on pins 5/6 (button
+on 7), encoder 3 on pins 8/9 (button on 10); button pins use `INPUT_PULLUP`.
+
 ## Building
 
 Windows, Visual Studio (`Multieffect.slnx` / `.vcxproj`).
