@@ -2,7 +2,7 @@
 
 A real-time guitar multi-effect processor with a Qt Quick GUI.
 
-## Screenshots
+## App view
 
 ![Main window](gui/assets/screenshots/im5.png)
 ![Tuner](docs/screenshots/tuner.png)
@@ -37,6 +37,17 @@ A real-time guitar multi-effect processor with a Qt Quick GUI.
 | AutoWah | envelope-driven filter |
 | Equalizer | static filter (3-band, biquad) |
 | Tuner | pitch detection (McLeod method) |
+
+## Effects art
+
+<table>
+  <tr>
+    <td><img src="gui/assets/screenshots/im1.png"/></td>
+    <td><img src="gui/assets/screenshots/im2.png"/></td>
+  <tr>
+    <td><img src="gui/assets/screenshots/im3.png"/></td>
+    <td><img src="gui/assets/screenshots/im4.png"/></td>
+  
 
 ## Building
 
