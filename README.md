@@ -5,7 +5,6 @@ A real-time guitar multi-effect processor with a Qt Quick GUI.
 ## App view
 
 ![Main window](gui/assets/screenshots/im5.png)
-![Tuner](docs/screenshots/tuner.png)
 
 ## Features
 
@@ -44,10 +43,12 @@ A real-time guitar multi-effect processor with a Qt Quick GUI.
   <tr>
     <td><img src="gui/assets/screenshots/im1.png"/></td>
     <td><img src="gui/assets/screenshots/im2.png"/></td>
+  </tr>
   <tr>
     <td><img src="gui/assets/screenshots/im3.png"/></td>
     <td><img src="gui/assets/screenshots/im4.png"/></td>
-  
+  </tr>
+</table>
 
 ## Building
 
