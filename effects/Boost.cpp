@@ -28,9 +28,9 @@ void Boost::scalePotValues(int pot0, int pot1, int pot2) {
 
 std::string Boost::getParamName(int idx) {
     switch (idx) {
-    case 0: return "gain";
-    case 1: return "tone";
-    case 2: return "volume";
+    case 0: return "Gain";
+    case 1: return "Tone";
+    case 2: return "Volume";
     default: return "?";
     }
 }

@@ -8,7 +8,7 @@
 #include <utility>
 #include <cstdint>
 
-// Łańcuch efektów — od 3 (domyślnie) do 6 slotów (odpowiadają sekcjom
+// Łańcuch efektów — od 1 do 6 slotów, startuje z 3 (odpowiadają sekcjom
 // ekranu w GUI; 3 fizyczne enkodery obsługują dowolną liczbę slotów przez
 // przełączanie fokusu). Sygnał przechodzi przez aktywne sloty po kolei
 // 0 -> 1 -> ... (pusty slot jest pomijany). Sam jest efektem (wzorzec
@@ -27,8 +27,9 @@
 class EffectChain : public Effect
 {
 public:
-	static constexpr int minSlots = 3;   // domyślna / minimalna liczba slotów
-	static constexpr int maxSlots = 6;   // maksymalna liczba slotów
+	static constexpr int minSlots = 1;      // minimalna liczba slotów
+	static constexpr int maxSlots = 6;      // maksymalna liczba slotów
+	static constexpr int defaultSlots = 3;  // liczba slotów przy starcie
 
 	EffectChain() = default;
 	~EffectChain() override;
@@ -92,7 +93,7 @@ public:
 
 private:
 	std::atomic<Effect*> slotArray[maxSlots] {};
-	std::atomic<int> count{ minSlots };
+	std::atomic<int> count{ defaultSlots };
 	std::vector<Effect*> graveyard;   // efekty wyjęte ze slotu, czekające na bezpieczne usunięcie
 	int focusIndex = 0;
 

@@ -68,3 +68,13 @@ add_custom_command(TARGET MultieffectGui POST_BUILD
         "C:/vcpkg/installed/x64-windows/bin/portaudio.dll"
         "$<TARGET_FILE_DIR:MultieffectGui>"
 )
+
+# cały folder assets/ (grafiki efektów w assets/effects/, ikona aplikacji
+# w assets/icon.png, cokolwiek dojdzie później) — kopiowany obok .exe z
+# każdym buildem, więc wystarczy wrzucić/podmienić pliki i przebudować,
+# bez grzebania w CMake
+add_custom_command(TARGET MultieffectGui POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/assets"
+        "$<TARGET_FILE_DIR:MultieffectGui>/assets"
+)

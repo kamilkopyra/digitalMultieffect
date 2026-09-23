@@ -33,3 +33,6 @@ cmake_install.cmake
 CTestTestfile.cmake
 *.user
 .qtcreator/
+
+# VS Code
+.vscode/

@@ -5,7 +5,7 @@ import QtQuick.Layouts
 ApplicationWindow {
     id: root
     width: 960
-    height: 440
+    height: 520
     visible: true
     title: tr("title")
 
@@ -23,6 +23,28 @@ ApplicationWindow {
 
     color: bgColor
 
+    // Domyślny styl QtQuick.Controls sam nie wie nic o naszym motywie
+    // (dark/light) — bez tego przyciski/pola miały białe tło niezależnie od
+    // reszty aplikacji, przez co tekst na nich bywał nieczytelny. `palette`
+    // ustawiona raz tutaj spływa w dół do wszystkich Buttonów/ComboBoxów/
+    // TextFieldów automatycznie.
+    palette.window: bgColor
+    palette.windowText: textColor
+    palette.button: panelColor
+    palette.buttonText: textColor
+    palette.text: textColor
+    palette.base: panelColor
+    palette.highlight: "#4caf50"
+    palette.highlightedText: "#ffffff"
+
+    // grupa "disabled" osobno — bez tego przyciski z enabled:false (np. +/-
+    // slot na granicy min/max) wyglądały identycznie jak aktywne, bo płaskie
+    // przypisanie wyżej ustawia ten sam kolor we wszystkich grupach naraz
+    palette.disabled.windowText: dimTextColor
+    palette.disabled.buttonText: dimTextColor
+    palette.disabled.text: dimTextColor
+    palette.disabled.button: Qt.darker(panelColor, 1.15)
+
     // ==================== język (prosty słownik EN/PL) ====================
     property string language: "en"
 
@@ -34,10 +56,16 @@ ApplicationWindow {
             addSlot: "+ slot",
             removeSlot: "- slot",
             clear: "Clear",
+            audioIn: "Input:",
+            audioOut: "Output:",
+            applyAudio: "Apply",
             menuPresets: "Presets",
             menuSave: "Save...",
             menuLoad: "Load",
             menuDelete: "Delete",
+            menuManage: "Manage presets...",
+            managePresetsTitle: "Presets",
+            close: "Close",
             menuLanguage: "Language",
             menuTheme: "Theme",
             light: "Light",
@@ -64,27 +92,33 @@ ApplicationWindow {
             cpu: "CPU",
             addSlot: "+ slot",
             removeSlot: "- slot",
-            clear: "Wyczysc",
+            clear: "Wyczyść",
+            audioIn: "Wejscie:",
+            audioOut: "Wyjscie:",
+            applyAudio: "Zastosuj",
             menuPresets: "Presety",
             menuSave: "Zapisz...",
             menuLoad: "Wczytaj",
-            menuDelete: "Usun",
-            menuLanguage: "Jezyk",
+            menuDelete: "Usuń",
+            menuManage: "Zarzadzaj presetami...",
+            managePresetsTitle: "Presety",
+            close: "Zamknij",
+            menuLanguage: "Język",
             menuTheme: "Motyw",
             light: "Jasny",
             dark: "Ciemny",
             slot: "Slot",
-            emptySlot: "Pusty slot — wybierz efekt powyzej",
+            emptySlot: "Pusty slot — wybierz efekt powyżej",
             record: "Nagrywaj",
             stopRecording: "Zatrzymaj nagrywanie",
-            noSignal: "Brak sygnalu... zagraj na strunie",
+            noSignal: "Brak sygnału... zagraj na strunie",
             inTune: "*** NASTROJONO! ***",
-            tooHigh: "za wysoko - poluzuj strune",
-            tooLow: "za nisko - naciagnij strune",
+            tooHigh: "za wysoko - poluzuj strunę",
+            tooLow: "za nisko - naciagnij strunę",
             stringLabel: "Struna",
             savePresetTitle: "Zapisz preset",
             presetName: "nazwa presetu",
-            noPresets: "(brak presetow)",
+            noPresets: "(brak presetów)",
             save: "Zapisz",
             cancel: "Anuluj",
             none: "-"
@@ -114,6 +148,24 @@ ApplicationWindow {
     // ==================== presety (lista odświeżana ręcznie po zapisie) ====================
     property var presetNames: chainModel.listPresets()
 
+    // ==================== urządzenia audio (dwie osobne listy — patrz komentarz w AudioEngine.h) ====================
+    property var allAudioDevices: chainModel.listAudioDevices()
+    function byRecommendedFirst(a, b) {
+        return (b.recommended ? 1 : 0) - (a.recommended ? 1 : 0)
+    }
+    property var inputDevices: allAudioDevices.filter(function(d) { return d.maxInputChannels > 0 }).sort(byRecommendedFirst)
+    property var outputDevices: allAudioDevices.filter(function(d) { return d.maxOutputChannels > 0 }).sort(byRecommendedFirst)
+
+    // odświeżanie listy — podłączenie/odłączenie USB dzieje się poza appką,
+    // bez żadnej akcji użytkownika do której mógłbym to podpiąć, więc trzeba
+    // odpytywać cyklicznie (PortAudio samo nie powiadamia o zmianach)
+    Timer {
+        interval: 2000
+        running: true
+        repeat: true
+        onTriggered: root.allAudioDevices = chainModel.listAudioDevices()
+    }
+
     // ==================== menu ====================
     menuBar: MenuBar {
         Menu {
@@ -123,39 +175,11 @@ ApplicationWindow {
                 text: root.tr("menuSave")
                 onTriggered: saveDialog.open()
             }
-
-            Menu {
-                id: presetLoadMenu
-                title: root.tr("menuLoad")
-                enabled: root.presetNames.length > 0
-
-                Instantiator {
-                    model: root.presetNames
-                    delegate: MenuItem {
-                        text: modelData
-                        onTriggered: chainModel.loadPreset(modelData)
-                    }
-                    onObjectAdded: (index, object) => presetLoadMenu.insertItem(index, object)
-                    onObjectRemoved: (index, object) => presetLoadMenu.removeItem(object)
-                }
-            }
-
-            Menu {
-                id: presetDeleteMenu
-                title: root.tr("menuDelete")
-                enabled: root.presetNames.length > 0
-
-                Instantiator {
-                    model: root.presetNames
-                    delegate: MenuItem {
-                        text: modelData
-                        onTriggered: {
-                            chainModel.deletePreset(modelData)
-                            root.presetNames = chainModel.listPresets()
-                        }
-                    }
-                    onObjectAdded: (index, object) => presetDeleteMenu.insertItem(index, object)
-                    onObjectRemoved: (index, object) => presetDeleteMenu.removeItem(object)
+            MenuItem {
+                text: root.tr("menuManage")
+                onTriggered: {
+                    root.presetNames = chainModel.listPresets()
+                    managePresetsDialog.open()
                 }
             }
         }
@@ -232,6 +256,72 @@ ApplicationWindow {
         onOpened: saveNameField.forceActiveFocus()
     }
 
+    // ==================== dialog zarzadzania presetami ====================
+    // Zwykła lista z przyciskami Wczytaj/Usuń w każdym wierszu — bez
+    // zagnieżdżonych Menu z nawigacją po hover, która potrafiła się gubić
+    // (submenu zamykało się zanim zdążyło się do niego dojechać po skosie).
+    Dialog {
+        id: managePresetsDialog
+        title: root.tr("managePresetsTitle")
+        modal: true
+        anchors.centerIn: parent
+        width: 360
+        height: 320
+
+        footer: DialogButtonBox {
+            Button {
+                text: root.tr("close")
+                DialogButtonBox.buttonRole: DialogButtonBox.RejectRole
+            }
+        }
+
+        ColumnLayout {
+            anchors.fill: parent
+            spacing: 6
+
+            Label {
+                Layout.fillWidth: true
+                visible: root.presetNames.length === 0
+                text: root.tr("noPresets")
+                color: root.dimTextColor
+            }
+
+            ListView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                clip: true
+                model: root.presetNames
+                spacing: 4
+
+                delegate: RowLayout {
+                    width: ListView.view.width
+                    spacing: 6
+
+                    Label {
+                        Layout.fillWidth: true
+                        text: modelData
+                        color: root.textColor
+                        elide: Text.ElideRight
+                    }
+                    Button {
+                        text: root.tr("menuLoad")
+                        onClicked: {
+                            chainModel.loadPreset(modelData)
+                            managePresetsDialog.close()
+                        }
+                    }
+                    Button {
+                        text: root.tr("menuDelete")
+                        onClicked: {
+                            chainModel.deletePreset(modelData)
+                            root.presetNames = chainModel.listPresets()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     // ==================== główny layout ====================
     ColumnLayout {
         anchors.fill: parent
@@ -252,19 +342,124 @@ ApplicationWindow {
                 font.bold: true
             }
             Item { Layout.fillWidth: true }
+
             Button {
                 text: root.tr("addSlot")
                 enabled: chainModel.slotCount < chainModel.maxSlots
+                opacity: enabled ? 1.0 : 0.35
                 onClicked: chainModel.addSlot()
             }
             Button {
                 text: root.tr("removeSlot")
                 enabled: chainModel.slotCount > chainModel.minSlots
+                opacity: enabled ? 1.0 : 0.35
                 onClicked: chainModel.removeSlot()
             }
             Button {
                 text: root.tr("clear")
                 onClicked: chainModel.resetChain()
+            }
+        }
+
+        // ==================== wybór karty dźwiękowej ====================
+        // Windows traktuje wejście i wyjście jako osobne urządzenia (jedno
+        // fizyczne urządzenie = dwa wpisy), stąd dwa osobne dropdowny, nie jeden.
+        RowLayout {
+            Layout.fillWidth: true
+            spacing: 8
+
+            Label { text: root.tr("audioIn"); color: root.mutedTextColor }
+            ComboBox {
+                id: inputDeviceCombo
+                Layout.fillWidth: true
+                model: root.inputDevices
+                textRole: "name"
+                currentIndex: {
+                    for (var i = 0; i < model.length; ++i)
+                        if (model[i].index === chainModel.currentInputDevice) return i
+                    return -1
+                }
+            }
+            Label { text: root.tr("audioOut"); color: root.mutedTextColor }
+            ComboBox {
+                id: outputDeviceCombo
+                Layout.fillWidth: true
+                model: root.outputDevices
+                textRole: "name"
+                currentIndex: {
+                    for (var i = 0; i < model.length; ++i)
+                        if (model[i].index === chainModel.currentOutputDevice) return i
+                    return -1
+                }
+            }
+            Button {
+                text: root.tr("applyAudio")
+                enabled: inputDeviceCombo.currentIndex >= 0 && outputDeviceCombo.currentIndex >= 0
+                onClicked: chainModel.selectAudioDevices(
+                    root.inputDevices[inputDeviceCombo.currentIndex].index,
+                    root.outputDevices[outputDeviceCombo.currentIndex].index
+                )
+            }
+        }
+
+        // ==================== oscyloskop (prosta wizualizacja wyjścia) ====================
+        Rectangle {
+            id: wavePanel
+            Layout.fillWidth: true
+            height: 70
+            color: root.trackColor
+            border.color: root.trackBorderColor
+            radius: 4
+
+            property var samples: []
+
+            Timer {
+                interval: 33   // ~30 fps, wystarczy dla płynnego oscyloskopu
+                running: true
+                repeat: true
+                onTriggered: {
+                    wavePanel.samples = chainModel.waveform()
+                    waveCanvas.requestPaint()
+                }
+            }
+
+            Canvas {
+                id: waveCanvas
+                anchors.fill: parent
+                onPaint: {
+                    var ctx = getContext("2d")
+                    ctx.clearRect(0, 0, width, height)
+
+                    var mid = height / 2
+
+                    // linia zerowa
+                    ctx.strokeStyle = root.trackBorderColor
+                    ctx.lineWidth = 1
+                    ctx.beginPath()
+                    ctx.moveTo(0, mid)
+                    ctx.lineTo(width, mid)
+                    ctx.stroke()
+
+                    var s = wavePanel.samples
+                    if (!s || s.length < 2) return
+
+                    // wzmocnienie tylko na potrzeby rysowania (nie dotyka dźwięku) —
+                    // realny sygnał gitarowy rzadko sięga pełnego zakresu ±1.0,
+                    // więc bez tego wykres wygląda na prawie płaski
+                    var visualGain = 4.0
+
+                    ctx.strokeStyle = "#4caf50"
+                    ctx.lineWidth = 1.5
+                    ctx.beginPath()
+                    for (var i = 0; i < s.length; ++i) {
+                        var x = (i / (s.length - 1)) * width
+                        var v = Math.max(-1, Math.min(1, s[i] * visualGain))
+                        var y = mid - v * mid * 0.9   // *0.9, zeby fala nie docinala sie na krawedziach
+                        if (i === 0) ctx.moveTo(x, y)
+                        else ctx.lineTo(x, y)
+                    }
+                    ctx.stroke()
+                }
             }
         }
 
@@ -363,7 +558,38 @@ ApplicationWindow {
                             }
                         }
 
-                        Item { Layout.fillHeight: true }
+                        // grafika efektu — prawdziwy plik z assets/effects/, w wolnym miejscu pod suwakami
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            Layout.minimumHeight: 60
+
+                            Image {
+                                id: iconImage
+                                anchors.centerIn: parent
+                                // bazuje na wymiarach całego slotPanel (te same dla każdego
+                                // typu panelu), nie na lokalnie zostającym miejscu — inaczej
+                                // panel Tunera (więcej elementów nad ikoną) zawsze wychodził mniejszy
+                                width: Math.min(Math.min(slotPanel.width, slotPanel.height) * 0.75, parent.height * 0.98)
+                                height: width
+                                fillMode: Image.PreserveAspectFit
+                                source: slotPanel.slotData.empty ? ""
+                                        : chainModel.effectIconUrl(slotPanel.slotData.name)
+                                visible: status === Image.Ready
+                                asynchronous: true
+                            }
+
+                            Label {
+                                anchors.centerIn: parent
+                                width: parent.width
+                                visible: !slotPanel.slotData.empty && iconImage.status !== Image.Ready
+                                horizontalAlignment: Text.AlignHCenter
+                                wrapMode: Text.WordWrap
+                                font.pixelSize: 10
+                                color: root.dimTextColor
+                                text: "assets/effects/" + slotPanel.slotData.name.toLowerCase() + ".png"
+                            }
+                        }
                     }
 
                     // --- tuner: animacja strojenia ---
@@ -385,21 +611,23 @@ ApplicationWindow {
 
                         ColumnLayout {
                             anchors.fill: parent
-                            spacing: 10
+                            spacing: 5
 
                             Label {
+                                Layout.fillWidth: true
+                                elide: Text.ElideRight
                                 text: tunerPanel.haveReading
                                       ? (root.tr("stringLabel") + ": " + tunerPanel.reading.stringName
                                          + "   " + tunerPanel.reading.freq.toFixed(1) + " Hz")
                                       : root.tr("noSignal")
                                 color: root.textColor
-                                font.pixelSize: 15
+                                font.pixelSize: 13
                             }
 
                             Rectangle {
                                 id: meterTrack
                                 Layout.fillWidth: true
-                                height: 26
+                                height: 16
                                 radius: 4
                                 color: root.trackColor
                                 border.color: root.trackBorderColor
@@ -429,10 +657,15 @@ ApplicationWindow {
                                 }
                             }
 
-                            Label {
-                                text: "-50                    0                    +50"
-                                color: root.dimTextColor
-                                font.pixelSize: 10
+                            RowLayout {
+                                Layout.fillWidth: true
+                                spacing: 0
+
+                                Label { text: "-50"; color: root.dimTextColor; font.pixelSize: 10 }
+                                Item { Layout.fillWidth: true }
+                                Label { text: "0"; color: root.dimTextColor; font.pixelSize: 10 }
+                                Item { Layout.fillWidth: true }
+                                Label { text: "+50"; color: root.dimTextColor; font.pixelSize: 10 }
                             }
 
                             Label {
@@ -444,7 +677,36 @@ ApplicationWindow {
                                 font.pixelSize: 14
                             }
 
-                            Item { Layout.fillHeight: true }
+                            // grafika efektu — ten sam mechanizm co w panelu zwykłego efektu
+                            Item {
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                Layout.minimumHeight: 60
+
+                                Image {
+                                    id: tunerIconImage
+                                    anchors.centerIn: parent
+                                    // ta sama reguła co iconImage w zwykłym panelu — bazuje na
+                                    // wymiarach slotPanel, nie na lokalnie zostającym miejscu
+                                    width: Math.min(Math.min(slotPanel.width, slotPanel.height) * 0.75, parent.height * 0.98)
+                                    height: width
+                                    fillMode: Image.PreserveAspectFit
+                                    source: chainModel.effectIconUrl("Tuner")
+                                    visible: status === Image.Ready
+                                    asynchronous: true
+                                }
+
+                                Label {
+                                    anchors.centerIn: parent
+                                    width: parent.width
+                                    visible: tunerIconImage.status !== Image.Ready
+                                    horizontalAlignment: Text.AlignHCenter
+                                    wrapMode: Text.WordWrap
+                                    font.pixelSize: 10
+                                    color: root.dimTextColor
+                                    text: "assets/effects/tuner.png"
+                                }
+                            }
                         }
                     }
 

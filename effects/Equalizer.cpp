@@ -86,9 +86,9 @@ std::string Equalizer::getName() {
 
 std::string Equalizer::getParamName(int idx) {
     switch (idx) {
-    case 0: return "low";
-    case 1: return "mid";
-    case 2: return "high";
+    case 0: return "Low";
+    case 1: return "Mid";
+    case 2: return "High";
     default: return "?";
     }
 }

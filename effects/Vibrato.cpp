@@ -54,9 +54,9 @@ void Vibrato::scalePotValues(int pot0, int pot1, int pot2) {
 
 std::string Vibrato::getParamName(int idx) {
     switch (idx) {
-    case 0: return "rate";
-    case 1: return "depth";
-    case 2: return "mix";
+    case 0: return "Rate";
+    case 1: return "Depth";
+    case 2: return "Mix";
     default: return "?";
     }
 }

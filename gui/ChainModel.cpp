@@ -20,6 +20,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QCoreApplication>
+#include <QUrl>
 #include <filesystem>
 
 ChainModel::ChainModel(QObject* parent) : QObject(parent) {}
@@ -84,8 +86,12 @@ void ChainModel::removeSlot() {
 void ChainModel::resetChain() {
     EffectChain& chain = engine.getChain();
     chain.clear();   // opróżnia wszystkie aktywne sloty (removeSlot i tak by to zrobił, ale jawnie)
-    while (chain.slotCount() > EffectChain::minSlots)
+    // wraca do domyślnych 3 slotów (nie do minimum 1) — "wyczyść" ma dać
+    // pusty punkt startowy, nie najmniejszy możliwy
+    while (chain.slotCount() > EffectChain::defaultSlots)
         chain.removeSlot();
+    while (chain.slotCount() < EffectChain::defaultSlots)
+        chain.addSlot();
     qInfo() << "Lancuch wyczyszczony.";
     emit chainChanged();
 }
@@ -163,6 +169,13 @@ QVariantMap ChainModel::cpuStats() {
     return result;
 }
 
+QVariantList ChainModel::waveform() {
+    QVariantList result;
+    for (float v : engine.snapshotWaveform())
+        result.append(v);
+    return result;
+}
+
 QStringList ChainModel::listPresets() {
     QStringList result;
     std::filesystem::create_directories("./presets");
@@ -236,6 +249,45 @@ bool ChainModel::loadPreset(const QString& name) {
     emit chainChanged();
     qInfo() << "Wczytano preset:" << f.fileName();
     return true;
+}
+
+QString ChainModel::effectIconUrl(const QString& name) const {
+    QString path = QCoreApplication::applicationDirPath() + "/assets/effects/" + name.toLower() + ".png";
+    return QUrl::fromLocalFile(path).toString();
+}
+
+QVariantList ChainModel::listAudioDevices() {
+    QVariantList result;
+    for (const auto& d : AudioEngine::listDevices()) {
+        QVariantMap m;
+        m["index"] = d.index;
+        m["name"] = (d.recommended ? QString::fromUtf8("★ ") : QString())
+                    + QString::fromStdString(d.name);
+        m["maxInputChannels"] = d.maxInputChannels;
+        m["maxOutputChannels"] = d.maxOutputChannels;
+        m["recommended"] = d.recommended;
+        result.append(m);
+    }
+    return result;
+}
+
+bool ChainModel::selectAudioDevices(int inputIndex, int outputIndex) {
+    engine.stop();
+    bool ok = engine.init_single_effect(16, inputIndex, outputIndex) == 0;
+    if (ok)
+        qInfo() << "Przelaczono audio - wejscie:" << inputIndex << "wyjscie:" << outputIndex;
+    else
+        qWarning() << "Nie udalo sie uruchomic audio - wejscie:" << inputIndex << "wyjscie:" << outputIndex;
+    emit audioDeviceChanged();
+    return ok;
+}
+
+int ChainModel::currentInputDevice() {
+    return engine.currentInputDevice();
+}
+
+int ChainModel::currentOutputDevice() {
+    return engine.currentOutputDevice();
 }
 
 bool ChainModel::deletePreset(const QString& name) {

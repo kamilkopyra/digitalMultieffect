@@ -37,9 +37,9 @@ void AutoWah::scalePotValues(int pot0, int pot1, int pot2) {
 
 std::string AutoWah::getParamName(int idx) {
     switch (idx) {
-    case 0: return "sensitivity";
-    case 1: return "resonance";
-    case 2: return "mix";
+    case 0: return "Sensitivity";
+    case 1: return "Resonance";
+    case 2: return "Mix";
     default: return "?";
     }
 }

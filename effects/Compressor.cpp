@@ -81,9 +81,9 @@ void Compressor::scalePotValues(int pot0, int pot1, int pot2) {
 
 std::string Compressor::getParamName(int idx) {
     switch (idx) {
-    case 0: return "treshold";
-    case 1: return "ratio";
-    case 2: return "makeupGain";
+    case 0: return "Threshold";
+    case 1: return "Ratio";
+    case 2: return "Makeup Gain";
     default: return "?";
     }
 }

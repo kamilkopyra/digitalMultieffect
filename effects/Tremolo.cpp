@@ -36,8 +36,8 @@ float Tremolo::scalePotValues(int pot0, int pot1) {
 
 std::string Tremolo::getParamName(int idx) {
 	switch (idx) {
-	case 0: return "frequency";
-	case 1: return "depth";
+	case 0: return "Frequency";
+	case 1: return "Depth";
 	case 2: return "None";
 	default: return "?";
 	}

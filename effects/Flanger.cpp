@@ -55,9 +55,9 @@ void Flanger::scalePotValues(int pot0, int pot1, int pot2) {
 
 std::string Flanger::getParamName(int idx) {
     switch (idx) {
-    case 0: return "rate";
-    case 1: return "depth";
-    case 2: return "feedback";
+    case 0: return "Rate";
+    case 1: return "Depth";
+    case 2: return "Feedback";
     default: return "?";
     }
 }

@@ -53,13 +53,13 @@ void EventHandler::handleKey(char key)
 
 	case '=': {
 		bool ok = engine->getChain().addSlot();
-		std::cout << (ok ? "Dodano slot. " : "Juz maksimum (6). ")
+		std::cout << (ok ? "Dodano slot. " : ("Juz maksimum (" + std::to_string(EffectChain::maxSlots) + "). "))
 			<< "Lancuch: " << engine->getChain().describe() << "\n";
 		break;
 	}
 	case '-': {
 		bool ok = engine->getChain().removeSlot();
-		std::cout << (ok ? "Usunieto ostatni slot. " : "Juz minimum (3). ")
+		std::cout << (ok ? "Usunieto ostatni slot. " : ("Juz minimum (" + std::to_string(EffectChain::minSlots) + "). "))
 			<< "Lancuch: " << engine->getChain().describe() << "\n";
 		break;
 	}

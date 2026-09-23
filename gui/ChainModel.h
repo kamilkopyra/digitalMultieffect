@@ -25,6 +25,8 @@ class ChainModel : public QObject
     Q_PROPERTY(int minSlots READ minSlots CONSTANT)
     Q_PROPERTY(int maxSlots READ maxSlots CONSTANT)
     Q_PROPERTY(bool recording READ isRecording NOTIFY recordingChanged)
+    Q_PROPERTY(int currentInputDevice READ currentInputDevice NOTIFY audioDeviceChanged)
+    Q_PROPERTY(int currentOutputDevice READ currentOutputDevice NOTIFY audioDeviceChanged)
 
 public:
     explicit ChainModel(QObject* parent = nullptr);
@@ -39,6 +41,8 @@ public:
     int minSlots() const;
     int maxSlots() const;
     bool isRecording();
+    int currentInputDevice();
+    int currentOutputDevice();
 
 public slots:
     // name == "" czyści slot
@@ -59,15 +63,32 @@ public slots:
     // zmieniają się z wątku audio, nie z akcji użytkownika)
     QVariantMap cpuStats();
 
+    // ostatnie próbki wyjściowe (oscyloskop) — jak wyżej, Timerem w QML
+    QVariantList waveform();
+
     // --- presety (zapisują/wczytują cały łańcuch: efekty + parametry) ---
     QStringList listPresets();
     bool savePreset(const QString& name);
     bool loadPreset(const QString& name);
     bool deletePreset(const QString& name);
 
+    // file:// URL do obrazka efektu (assets/effects/<nazwa_malymi>.png, obok
+    // .exe — kopiowane tam przez CMake). Image w QML pokaże błąd/pustkę,
+    // jeśli pliku jeszcze nie ma — to naturalny, bezpieczny fallback.
+    QString effectIconUrl(const QString& name) const;
+
+    // --- wybór karty dźwiękowej ---
+    // WSZYSTKIE urządzenia (z maxInputChannels/maxOutputChannels w każdym
+    // wpisie) — QML filtruje na listę wejść i osobną listę wyjść, bo to
+    // zwykle dwa różne wpisy dla tego samego fizycznego urządzenia.
+    QVariantList listAudioDevices();
+    // zatrzymuje i uruchamia strumień ponownie na wskazanej parze urządzeń
+    bool selectAudioDevices(int inputIndex, int outputIndex);
+
 signals:
     void chainChanged();
     void recordingChanged();
+    void audioDeviceChanged();
 
 private:
     AudioEngine engine;

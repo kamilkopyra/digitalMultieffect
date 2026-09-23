@@ -56,9 +56,9 @@ void NoiseGate::scalePotValues(int pot0, int pot1, int pot2) {
 
 std::string NoiseGate::getParamName(int idx) {
 	switch (idx) {
-	case 0: return "threshold";
-	case 1: return "attack_coeff";
-	case 2: return "release_coeff";
+	case 0: return "Threshold";
+	case 1: return "Attack";
+	case 2: return "Release";
 	default: return "?";
 	}
 }

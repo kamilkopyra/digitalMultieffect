@@ -32,9 +32,9 @@ void TubeScreamer::scalePotValues(int pot0, int pot1, int pot2) {
 
 std::string TubeScreamer::getParamName(int idx) {
     switch (idx) {
-    case 0: return "drive";
-    case 1: return "volume";
-    case 2: return "tone";
+    case 0: return "Drive";
+    case 1: return "Volume";
+    case 2: return "Tone";
     default: return "?";
     }
 }
