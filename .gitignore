@@ -1,0 +1,10 @@
+# Vendor code - fetched separately as a git submodule, not committed here
+daisy/DaisyExamples/
+
+# Build artifacts
+build/
+*.o
+*.elf
+*.hex
+*.map
+*.bin
