@@ -2,7 +2,6 @@
 
 float Fuzz::process(float sample) {
 
-    scalePotValues(pot[0], pot[1], pot[2]);
     float driven = sample * gain;
     float clipped = hardClipping(driven);
 	

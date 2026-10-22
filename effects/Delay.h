@@ -1,3 +1,5 @@
+//work to be done: port for daisy
+
 #pragma once
 #include <string>
 #include <vector>
@@ -24,4 +26,5 @@ private:
     float feedback = 0.3f;
     float mix = 0.3f;
     void scalePotValues(int pot0, int pot1, int pot2);
+    void onParamChange() override { scalePotValues(pot[0], pot[1], pot[2]); }
 };

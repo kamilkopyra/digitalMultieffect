@@ -1,7 +1,5 @@
 #include "Equalizer.h"
-#include <algorithm>
 
-static constexpr float kPi = 3.14159265f;
 
 float Equalizer::potToDb(int pot) {
     // 0 -> -12 dB, 50 -> 0 dB, 100 -> +12 dB
@@ -10,7 +8,7 @@ float Equalizer::potToDb(int pot) {
 
 void Equalizer::makeLowShelf(Biquad& bq, float f0, float dBgain) {
     float A = powf(10.0f, dBgain / 40.0f);
-    float w0 = 2.0f * kPi * f0 / sampleRate;
+    float w0 = 2.0f * pi * f0 / sampleRate;
     float cw = cosf(w0), sw = sinf(w0);
     float alpha = sw / 2.0f * 1.41421356f;          // S = 1
     float twoSqrtAalpha = 2.0f * sqrtf(A) * alpha;
@@ -28,7 +26,7 @@ void Equalizer::makeLowShelf(Biquad& bq, float f0, float dBgain) {
 
 void Equalizer::makeHighShelf(Biquad& bq, float f0, float dBgain) {
     float A = powf(10.0f, dBgain / 40.0f);
-    float w0 = 2.0f * kPi * f0 / sampleRate;
+    float w0 = 2.0f * pi * f0 / sampleRate;
     float cw = cosf(w0), sw = sinf(w0);
     float alpha = sw / 2.0f * 1.41421356f;
     float twoSqrtAalpha = 2.0f * sqrtf(A) * alpha;
@@ -46,7 +44,7 @@ void Equalizer::makeHighShelf(Biquad& bq, float f0, float dBgain) {
 
 void Equalizer::makePeak(Biquad& bq, float f0, float q, float dBgain) {
     float A = powf(10.0f, dBgain / 40.0f);
-    float w0 = 2.0f * kPi * f0 / sampleRate;
+    float w0 = 2.0f * pi * f0 / sampleRate;
     float cw = cosf(w0), sw = sinf(w0);
     float alpha = sw / (2.0f * q);
 
@@ -72,8 +70,6 @@ void Equalizer::recalcIfNeeded(int pot0, int pot1, int pot2) {
 }
 
 float Equalizer::process(float sample) {
-    recalcIfNeeded(pot[0], pot[1], pot[2]);
-
     float y = low.process(sample);
     y = mid.process(y);
     y = high.process(y);

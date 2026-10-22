@@ -1,26 +1,28 @@
 #include "Phaser.h"
 #include <algorithm>
 
-static constexpr float kPi = 3.14159265f;
-static constexpr float kTwoPi = 6.28318531f;
 
 float Phaser::process(float sample) {
 
-    scalePotValues(pot[0], pot[1], pot[2]);
+    // LFO ma najwyżej 2 Hz, więc współczynnik filtrów wystarczy przeliczać
+    // co ctrlRate próbek (3 kHz) zamiast co próbkę — różnicy nie słychać
+    if (ctrlCounter == 0) {
+        ctrlCounter = ctrlRate;
 
-    // LFO -> częstotliwość załamania filtrów wszechprzepustowych
-    phase += kTwoPi * rateHz / sampleRate;
-    if (phase > kTwoPi) phase -= kTwoPi;
-    float lfo = 0.5f + 0.5f * sinf(phase);
+        // LFO -> częstotliwość załamania filtrów wszechprzepustowych
+        phase += phaseInc;
+        if (phase > twoPi) phase -= twoPi;
+        float lfo = 0.5f + 0.5f * sinf(phase);
 
-    // zamiatanie logarytmiczne między ~200 Hz a ~2 kHz (skalowane głębią)
-    float fMin = 200.0f;
-    float fMax = 200.0f + depth * 1800.0f;
-    float fc = fMin * powf(fMax / fMin, lfo);
+        // zamiatanie logarytmiczne między ~200 Hz a ~2 kHz (skalowane głębią):
+        // fMin * (fMax / fMin)^lfo
+        float fc = fMin * expf(lfo * logRatio);
 
-    // współczynnik filtru wszechprzepustowego 1. rzędu
-    float t = tanf(kPi * fc / sampleRate);
-    float a = (t - 1.0f) / (t + 1.0f);
+        // współczynnik filtru wszechprzepustowego 1. rzędu
+        float t = tanf(pi * fc / sampleRate);
+        a = (t - 1.0f) / (t + 1.0f);
+    }
+    ctrlCounter--;
 
     float x = sample + feedbackSample * feedback;
 
@@ -43,9 +45,14 @@ std::string Phaser::getName() {
 }
 
 void Phaser::scalePotValues(int pot0, int pot1, int pot2) {
-    rateHz = 0.05f + (pot0 / 100.0f) * 1.95f;   // 0.05 - 2 Hz
-    depth = pot1 / 100.0f;                       // 0 - 1
-    feedback = (pot2 / 100.0f) * 0.7f;           // 0 - 0.9
+    float rateHz = 0.05f + (pot0 / 100.0f) * 1.95f;   // 0.05 - 2 Hz
+    phaseInc = twoPi * rateHz / sampleRate * ctrlRate;
+
+    float depth = pot1 / 100.0f;                       // 0 - 1
+    float fMax = fMin + depth * 1800.0f;
+    logRatio = logf(fMax / fMin);
+
+    feedback = (pot2 / 100.0f) * 0.7f;           // 0 - 0.7
 }
 
 std::string Phaser::getParamName(int idx) {
@@ -60,4 +67,5 @@ std::string Phaser::getParamName(int idx) {
 void Phaser::TapToParam(float ms) {
     float hz = 1000.0f / ms;
     pot[0] = std::clamp(static_cast<int>((hz - 0.05f) / 1.95f * 100.0f), 0, 100);
+    onParamChange();
 }

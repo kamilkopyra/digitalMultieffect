@@ -2,8 +2,6 @@
 
 
 float NoiseGate::process(float sample) {
-	scalePotValues(pot[0], pot[1], pot[2]);
-
 	// envelope follower zamiast RMS
 	float level = fabsf(sample);
 	rms = rms + 0.001f * (level - rms);
@@ -40,18 +38,10 @@ std::string NoiseGate::getName() {
 	return "NoiseGate";
 }
 
-float NoiseGate::calcRMS(float buffer[]) {
-	float sum = 0.0f;
-	for (int i = 0; i < FramesPerBuffer; ++i) {
-		sum += buffer[i] * buffer[i];
-	}
-	return sqrtf(sum / FramesPerBuffer);
-}
-
 void NoiseGate::scalePotValues(int pot0, int pot1, int pot2) {
 	threshold = (pot0 / 100.0) /50 ; 
 	attack_coeff = 0.0005f + (pot1 / 100.0f) * 0.005f;  
-	release_coeff = 0.00005f + (pot1 / 100.0f) * 0.005f; 
+	release_coeff = 0.00005f + (pot2 / 100.0f) * 0.005f; 
 }
 
 std::string NoiseGate::getParamName(int idx) {

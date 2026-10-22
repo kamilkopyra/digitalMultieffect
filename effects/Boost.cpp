@@ -2,8 +2,6 @@
 
 float Boost::process(float sample) {
 
-    scalePotValues(pot[0], pot[1], pot[2]);
-
     float boosted = sample * gain;
 
     // prosty filtr barwy — jak w Rat/TubeScreamer: mniejszy "tone" = ciemniej

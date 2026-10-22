@@ -32,6 +32,7 @@ private:
     int lastPot[3] = { -1, -1, -1 };
 
     void recalcIfNeeded(int pot0, int pot1, int pot2);
+    void onParamChange() override { recalcIfNeeded(pot[0], pot[1], pot[2]); }
     static void makeLowShelf(Biquad& bq, float f0, float dBgain);
     static void makeHighShelf(Biquad& bq, float f0, float dBgain);
     static void makePeak(Biquad& bq, float f0, float q, float dBgain);

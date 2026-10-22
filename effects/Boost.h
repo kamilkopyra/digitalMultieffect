@@ -1,3 +1,4 @@
+//ready for Daisy
 #pragma once
 #include "Effect.h"
 #include <cmath>
@@ -22,4 +23,5 @@ private:
     float filtered = 0.0f;
 
     void scalePotValues(int pot0, int pot1, int pot2);
+    void onParamChange() override { scalePotValues(pot[0], pot[1], pot[2]); }
 };

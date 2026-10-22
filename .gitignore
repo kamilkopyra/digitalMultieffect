@@ -1,5 +1,5 @@
 # Vendor code - fetched separately as a git submodule, not committed here
-daisy/DaisyExamples/
+daisy/libDaisy/
 
 # Build artifacts
 build/

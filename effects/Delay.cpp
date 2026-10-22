@@ -9,8 +9,6 @@ Delay::Delay() {
 
 float Delay::process(float sample) {
 
-    scalePotValues(pot[0], pot[1], pot[2]);
-
     int delaySamples = static_cast<int>((delayTimeMs / 1000.0f) * sampleRate);
 
     if (delaySamples < 1) {

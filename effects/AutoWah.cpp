@@ -1,11 +1,8 @@
 #include "AutoWah.h"
 #include <algorithm>
 
-static constexpr float kPi = 3.14159265f;
 
 float AutoWah::process(float sample) {
-
-    scalePotValues(pot[0], pot[1], pot[2]);
 
     // --- śledzenie obwiedni (szybki atak, wolne opadanie) ---
     float level = fabsf(sample);
@@ -17,7 +14,7 @@ float AutoWah::process(float sample) {
     fc = std::clamp(fc, baseFreq, maxFreq);
 
     // --- filtr stanu zmiennego (Chamberlin) ---
-    float f = 2.0f * sinf(kPi * fc / sampleRate);
+    float f = 2.0f * sinf(pi * fc / sampleRate);
     lp += f * bp;
     float hp = sample - lp - qCoeff * bp;
     bp += f * hp;

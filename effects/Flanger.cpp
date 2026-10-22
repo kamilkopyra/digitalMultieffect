@@ -1,22 +1,19 @@
 #include "Flanger.h"
 #include <algorithm>
 
-static constexpr float kTwoPi = 6.28318531f;
 
 float Flanger::process(float sample) {
 
-    scalePotValues(pot[0], pot[1], pot[2]);
-
     // LFO w zakresie [0, 1]
-    phase += kTwoPi * rateHz / sampleRate;
-    if (phase > kTwoPi) phase -= kTwoPi;
+    phase += phaseInc;
+    if (phase > twoPi) phase -= twoPi;
     float lfo = 0.5f + 0.5f * sinf(phase);
 
     // opóźnienie: baza 1 ms + zamiatanie do ~8 ms
     float baseMs = 1.0f;
     float sweepMs = depth * 7.0f;
     float delayMs = baseMs + sweepMs * lfo;
-    float delaySamples = delayMs * sampleRate / 1000.0f;
+    float delaySamples = delayMs * (sampleRate / 1000.0f);
 
     float delayed = readInterpolated(delaySamples);
 
@@ -48,7 +45,8 @@ std::string Flanger::getName() {
 }
 
 void Flanger::scalePotValues(int pot0, int pot1, int pot2) {
-    rateHz = 0.05f + (pot0 / 100.0f) * 1.95f;   // 0.05 - 2 Hz
+    float rateHz = 0.05f + (pot0 / 100.0f) * 1.95f;   // 0.05 - 2 Hz
+    phaseInc = twoPi * rateHz / sampleRate;
     depth = pot1 / 100.0f;                       // 0 - 1
     feedback = (pot2 / 100.0f) * 0.7f;           // 0 - 0.9
 }
@@ -65,4 +63,5 @@ std::string Flanger::getParamName(int idx) {
 void Flanger::TapToParam(float ms) {
     float hz = 1000.0f / ms;
     pot[0] = std::clamp(static_cast<int>((hz - 0.05f) / 1.95f * 100.0f), 0, 100);
+    onParamChange();
 }

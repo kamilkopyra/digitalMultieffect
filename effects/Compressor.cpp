@@ -9,8 +9,6 @@
 
 float Compressor::process(float sample) {
 
-    scalePotValues(pot[0], pot[1], pot[2]);
-
     float compressed = compressSample(sample);
 
     return compressed * makeupGain;
@@ -18,7 +16,7 @@ float Compressor::process(float sample) {
 
 float Compressor::compressSample(float x) {  
 
-    // Envelope follower
+    // Envelope follower — jedyne wygładzanie (attack/release), gain liczony wprost z obwiedni
     float level = fabsf(x);
 
     if (level > envelope) {
@@ -29,27 +27,16 @@ float Compressor::compressSample(float x) {
     }
 
     // Jeśli sygnał poniżej progu, nie ściskamy
-    float targetGain = 1.0f;
+    float gain = 1.0f;
 
     if (envelope > threshold) {
-        float exceeded = envelope - threshold;
-
-        // poziom po kompresji
-        float compressedLevel = threshold + exceeded / ratio;
-
-        // gain reduction
-        targetGain = compressedLevel / envelope;
+        // kompresja w dB: każdy dB ponad progiem -> 1/ratio dB na wyjściu,
+        // czyli redukcja (1 - 1/ratio) dB na każdy dB nadmiaru.
+        // W skali liniowej to samo: gain = (threshold / envelope)^(1 - 1/ratio)
+        gain = powf(threshold / envelope, slope);
     }
 
-    // Wygładzanie gainu, żeby nie klikało
-    if (targetGain < currentGain) {
-        currentGain += attackCoeff * (targetGain - currentGain);
-    }
-    else {
-        currentGain += releaseCoeff * (targetGain - currentGain);
-    }
-
-    return x * currentGain;
+    return x * gain;
 }
 
 std::string Compressor::getName() {
@@ -58,7 +45,7 @@ std::string Compressor::getName() {
 
 void Compressor::scalePotValues(int pot0, int pot1, int pot2) {
 
-    float thresholdNorm = pot0 / 100.0;
+    float thresholdNorm = pot0 / 100.0f;
     float ratioNorm = pot1 / 100.0f;
     float makeupNorm = pot2 / 100.0f;
 
@@ -69,14 +56,15 @@ void Compressor::scalePotValues(int pot0, int pot1, int pot2) {
     
     ratio = 2.0f + ratioNorm * 8.0f;
     // zakres: 2.0 -> 10.0
+    slope = 1.0f - 1.0f / ratio;
 
     
     makeupGain = 0.9f + makeupNorm * 2.6f;
   
-    attackCoeff = 0.02f;
+    attackCoeff = 0.02f;      // ~1 ms przy 48 kHz
 
     
-    releaseCoeff = 0.0015f;
+    releaseCoeff = 0.0002f;   // ~100 ms
 }
 
 std::string Compressor::getParamName(int idx) {

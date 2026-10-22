@@ -1,18 +1,15 @@
 #include "Vibrato.h"
 #include <algorithm>
 
-static constexpr float kTwoPi = 6.28318531f;
 
 float Vibrato::process(float sample) {
-
-    scalePotValues(pot[0], pot[1], pot[2]);
 
     // zapis próbki do bufora kołowego
     buffer[writeIndex] = sample;
 
     // LFO — sinus w zakresie [-1, 1]
-    phase += kTwoPi * rateHz / sampleRate;
-    if (phase > kTwoPi) phase -= kTwoPi;
+    phase += phaseInc;
+    if (phase > twoPi) phase -= twoPi;
     float lfo = sinf(phase);
 
     // opóźnienie oscyluje wokół wartości środkowej
@@ -47,7 +44,8 @@ std::string Vibrato::getName() {
 }
 
 void Vibrato::scalePotValues(int pot0, int pot1, int pot2) {
-    rateHz = 0.5f + (pot0 / 100.0f) * 8.0f;   // 0.5 - 8 Hz
+    float rateHz = 0.5f + (pot0 / 100.0f) * 7.5f;   // 0.5 - 8 Hz
+    phaseInc = twoPi * rateHz / sampleRate;
     depthMs = (pot1 / 100.0f) * 2.0f;         // 0 - 12 ms
     mix = pot2 / 100.0f;                        // 0 - 1
 }
@@ -64,4 +62,5 @@ std::string Vibrato::getParamName(int idx) {
 void Vibrato::TapToParam(float ms) {
     float hz = 1000.0f / ms;
     pot[0] = std::clamp(static_cast<int>((hz - 0.5f) / 7.5f * 100.0f), 0, 100);
+    onParamChange();
 }

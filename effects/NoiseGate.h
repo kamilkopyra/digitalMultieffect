@@ -1,11 +1,6 @@
 #pragma once
-#include <cmath>
 #include "Effect.h"
-#include <iostream>
-
-
-#define FramesPerBuffer  64
-
+#include <cmath>
 
 class NoiseGate : public Effect
 {
@@ -15,8 +10,8 @@ public:
 	std::string getParamName(int idx) override;
 	std::array<int, 3> getDefaultParams() override { return { 100, 80, 100 }; }
 private:
-	float calcRMS(float buffer[]);
 	void scalePotValues(int pot0, int pot1, int pot2);
+	void onParamChange() override { scalePotValues(pot[0], pot[1], pot[2]); }
 	float rms = 0.0f;
 	float threshold = 0.01; // próg poniżej którego dźwięk będzie tłumiony
 	float attack_coeff = 0.01f;

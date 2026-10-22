@@ -1,8 +1,8 @@
+//ready for Daisy
 #pragma once
 #include "Effect.h"
 #include <cmath>
 
-#define FramesPerBuffer  64
 
 class Rat : public Effect
 {
@@ -15,6 +15,7 @@ private:
     
     float softClipping(float x, float drive);
     void scalePotValues(int pot0, int pot1, int pot2);
+    void onParamChange() override { scalePotValues(pot[0], pot[1], pot[2]); }
 	
 
     float bassFiltered = 0.0f;

@@ -18,15 +18,20 @@ public:
 
 private:
     static constexpr int stages = 6;
+    static constexpr int ctrlRate = 16;   // co ile próbek przeliczać LFO i współczynnik filtru
+    static constexpr float fMin = 200.0f;
 
     float apX[stages] = { 0.0f };   // wejścia poprzednie każdego stopnia
     float apY[stages] = { 0.0f };   // wyjścia poprzednie każdego stopnia
     float feedbackSample = 0.0f;
     float phase = 0.0f;
+    int ctrlCounter = 0;
+    float a = 0.0f;           // współczynnik filtrów wszechprzepustowych
 
-    float rateHz = 0.3f;
-    float depth = 0.6f;       // 0 - 1
-    float feedback = 0.3f;    // 0 - 0.9
+    float phaseInc = 0.0f;    // przyrost fazy LFO na krok sterowania (ctrlRate próbek)
+    float logRatio = 0.0f;    // logf(fMax / fMin), zależy od depth
+    float feedback = 0.3f;    // 0 - 0.7
 
     void scalePotValues(int pot0, int pot1, int pot2);
+    void onParamChange() override { scalePotValues(pot[0], pot[1], pot[2]); }
 };

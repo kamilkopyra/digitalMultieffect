@@ -1,3 +1,4 @@
+//Ready for Daisy
 #pragma once
 #include "Effect.h"
 #include <cmath>
@@ -22,10 +23,11 @@ private:
     int writeIndex = 0;
     float phase = 0.0f;
 
-    float rateHz = 5.0f;
+    float phaseInc = 0.0f;   // przyrost fazy LFO na próbkę
     float depthMs = 3.0f;
     float mix = 1.0f;
 
     void scalePotValues(int pot0, int pot1, int pot2);
+    void onParamChange() override { scalePotValues(pot[0], pot[1], pot[2]); }
     float readInterpolated(float delaySamples);
 };

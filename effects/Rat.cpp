@@ -4,8 +4,6 @@
 
 float Rat::process(float sample) {
 
-    scalePotValues(pot[0], pot[1], pot[2]);
-
     // 1. Lekki bass cut przed clippingiem, ale dużo mniejszy niż w TubeScreamerze
     bassFiltered += 0.045f * (sample - bassFiltered);
     float highPassed = sample - bassFiltered;

@@ -8,6 +8,8 @@
 // miejscach (tak jak było wcześniej: Effect.h i AudioEngine.h definiowały
 // identyczne makro osobno).
 inline constexpr int sampleRate = 48000;
+inline constexpr float pi    = 3.14159265f;
+inline constexpr float twoPi = 6.28318531f;
 
 class Effect
 {
@@ -26,17 +28,24 @@ public:
 	// Sterowanie parametrami (enkodery / klawiatura).
 	// Każdy efekt trzyma własne 3 parametry, dzięki czemu w łańcuchu
 	// efekty nie współdzielą jednego zestawu potencjometrów.
-	void setParam(int idx, int value) { if (idx >= 0 && idx < 3) ownParams[idx] = value; }
+	void setParam(int idx, int value) {
+		if (idx >= 0 && idx < 3) { ownParams[idx] = value; onParamChange(); }
+	}
 	int  getParam(int idx) const { return (idx >= 0 && idx < 3) ? ownParams[idx] : 0; }
 	void loadDefaultParams() {
 		auto d = getDefaultParams();
 		ownParams[0] = d[0]; ownParams[1] = d[1]; ownParams[2] = d[2];
+		onParamChange();
 	}
 
 	// zgodność wstecz — można wpiąć zewnętrzną tablicę potów
 	void setPot(int* p) { pot = p; }
 
 protected:
+	// przeliczenie współczynników z pot[0..2] — tylko gdy parametr się zmieni,
+	// nie co próbkę (wołane z pętli głównej, nie z przerwania audio)
+	virtual void onParamChange() {}
+
 	int ownParams[3] = { 0, 0, 0 };
 	int* pot = ownParams;   // efekty czytają pot[0..2] — domyślnie własne parametry
 };
